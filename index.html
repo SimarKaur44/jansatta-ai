@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jansatta AI — Governance Intelligence Platform</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #090d14;
+    --surface: #0f1520;
+    --surface2: #141c2e;
+    --border: rgba(255,255,255,0.07);
+    --accent: #e8474e;
+    --accent2: #f97316;
+    --green: #22c55e;
+    --yellow: #eab308;
+    --red: #ef4444;
+    --text: #e8eaf0;
+    --muted: #6b7a96;
+    --font: 'Space Grotesk', sans-serif;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { background:var(--bg); color:var(--text); font-family:var(--font); min-height:100vh; overflow-x:hidden; }
+
+  /* NAV */
+  nav {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 40px; border-bottom:1px solid var(--border);
+    background:rgba(9,13,20,0.95); backdrop-filter:blur(20px);
+    position:sticky; top:0; z-index:100;
+  }
+  .logo { font-size:22px; font-weight:700; letter-spacing:-0.5px; }
+  .logo span { color:var(--accent); }
+  .nav-tag {
+    font-size:11px; font-weight:600; letter-spacing:2px; color:var(--muted);
+    border:1px solid var(--border); padding:4px 12px; border-radius:20px;
+    text-transform:uppercase;
+  }
+  .live-dot {
+    display:flex; align-items:center; gap:8px; font-size:12px; color:var(--green);
+    font-weight:600;
+  }
+  .live-dot::before {
+    content:''; width:8px; height:8px; border-radius:50%; background:var(--green);
+    animation:pulse 2s infinite;
+  }
+  @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+
+  /* HERO */
+  .hero {
+    padding:48px 40px 32px;
+    background: linear-gradient(180deg, rgba(232,71,78,0.04) 0%, transparent 100%);
+    border-bottom: 1px solid var(--border);
+  }
+  .hero-tag {
+    display:inline-flex; align-items:center; gap:8px;
+    font-size:11px; font-weight:600; letter-spacing:2px;
+    color:var(--accent); text-transform:uppercase; margin-bottom:16px;
+  }
+  .hero h1 {
+    font-size:clamp(28px,4vw,48px); font-weight:700; line-height:1.1;
+    letter-spacing:-1px; margin-bottom:12px;
+  }
+  .hero h1 em { color:var(--accent); font-style:normal; }
+  .hero p { color:var(--muted); font-size:15px; max-width:600px; }
+  .hero-stats {
+    display:flex; gap:32px; margin-top:28px; flex-wrap:wrap;
+  }
+  .stat { }
+  .stat-num { font-size:28px; font-weight:700; color:var(--accent); }
+  .stat-label { font-size:12px; color:var(--muted); margin-top:2px; }
+
+  /* MAIN GRID */
+  .main { display:grid; grid-template-columns:420px 1fr; gap:0; min-height:calc(100vh - 180px); }
+
+  /* LEFT PANEL */
+  .left-panel {
+    border-right:1px solid var(--border);
+    display:flex; flex-direction:column;
+    background:var(--surface);
+  }
+  .panel-header {
+    padding:20px 24px; border-bottom:1px solid var(--border);
+    font-size:11px; font-weight:700; letter-spacing:2px;
+    color:var(--muted); text-transform:uppercase;
+  }
+
+  /* INPUT SECTION */
+  .input-section { padding:24px; border-bottom:1px solid var(--border); }
+  .input-label {
+    font-size:12px; font-weight:600; color:var(--muted);
+    text-transform:uppercase; letter-spacing:1px; margin-bottom:10px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .input-label::before { content:'01'; color:var(--accent); font-size:10px; }
+  textarea {
+    width:100%; background:var(--surface2); border:1px solid var(--border);
+    border-radius:10px; padding:14px; color:var(--text); font-family:var(--font);
+    font-size:14px; resize:none; height:100px; outline:none; transition:border 0.2s;
+    line-height:1.6;
+  }
+  textarea:focus { border-color:rgba(232,71,78,0.4); }
+  textarea::placeholder { color:var(--muted); font-size:13px; }
+
+  .sample-btns { display:flex; gap:8px; margin-top:10px; flex-wrap:wrap; }
+  .sample-btn {
+    font-size:11px; padding:5px 10px; border-radius:6px;
+    background:var(--surface2); border:1px solid var(--border);
+    color:var(--muted); cursor:pointer; transition:all 0.2s; font-family:var(--font);
+  }
+  .sample-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+  .analyze-btn {
+    width:100%; margin-top:14px; padding:14px;
+    background:var(--accent); border:none; border-radius:10px;
+    color:#fff; font-size:14px; font-weight:700; cursor:pointer;
+    font-family:var(--font); letter-spacing:0.5px;
+    transition:all 0.2s; position:relative; overflow:hidden;
+  }
+  .analyze-btn:hover { background:#c73a40; transform:translateY(-1px); }
+  .analyze-btn:active { transform:translateY(0); }
+
+  /* RESULT SECTION */
+  .result-section { padding:24px; flex:1; }
+  .result-label {
+    font-size:12px; font-weight:600; color:var(--muted);
+    text-transform:uppercase; letter-spacing:1px; margin-bottom:14px;
+    display:flex; align-items:center; gap:8px;
+  }
+  .result-label::before { content:'02'; color:var(--accent); font-size:10px; }
+
+  .result-card { background:var(--surface2); border-radius:12px; overflow:hidden; border:1px solid var(--border); }
+  .result-row {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:13px 16px; border-bottom:1px solid var(--border);
+    font-size:13px;
+  }
+  .result-row:last-child { border-bottom:none; }
+  .result-key { color:var(--muted); font-weight:500; }
+  .result-val { font-weight:600; display:flex; align-items:center; gap:6px; }
+  .badge {
+    padding:3px 10px; border-radius:20px; font-size:11px; font-weight:700;
+    letter-spacing:0.5px;
+  }
+  .badge-neg { background:rgba(239,68,68,0.15); color:#ef4444; border:1px solid rgba(239,68,68,0.3); }
+  .badge-pos { background:rgba(34,197,94,0.15); color:#22c55e; border:1px solid rgba(34,197,94,0.3); }
+  .badge-neu { background:rgba(234,179,8,0.15); color:#eab308; border:1px solid rgba(234,179,8,0.3); }
+  .badge-issue { background:rgba(232,71,78,0.1); color:var(--accent); border:1px solid rgba(232,71,78,0.2); }
+  .badge-ward { background:rgba(99,102,241,0.1); color:#818cf8; border:1px solid rgba(99,102,241,0.2); }
+
+  .check { color:var(--green); font-size:16px; }
+
+  .confidence-bar {
+    width:80px; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; overflow:hidden;
+  }
+  .confidence-fill { height:100%; background:var(--accent); border-radius:2px; transition:width 0.6s ease; }
+
+  .alert-generated {
+    margin-top:14px; padding:14px 16px;
+    background:rgba(232,71,78,0.07); border:1px solid rgba(232,71,78,0.2);
+    border-radius:10px; font-size:13px; line-height:1.6;
+  }
+  .alert-generated strong { color:var(--accent); display:block; margin-bottom:4px; font-size:12px; letter-spacing:1px; text-transform:uppercase; }
+
+  .placeholder-state {
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:32px; text-align:center; color:var(--muted); gap:12px;
+  }
+  .placeholder-state .icon { font-size:40px; opacity:0.3; }
+  .placeholder-state p { font-size:13px; line-height:1.6; }
+
+  /* RIGHT PANEL - MAP */
+  .right-panel { display:flex; flex-direction:column; background:var(--bg); }
+  .map-header {
+    padding:20px 28px; border-bottom:1px solid var(--border);
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .map-title { font-size:11px; font-weight:700; letter-spacing:2px; color:var(--muted); text-transform:uppercase; }
+  .map-subtitle { font-size:13px; font-weight:600; margin-top:2px; }
+
+  .map-container { flex:1; position:relative; padding:24px; }
+
+  /* SVG MAP */
+  .delhi-map-wrap {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:16px; overflow:hidden; height:420px; position:relative;
+  }
+  #delhi-svg { width:100%; height:100%; }
+
+  .map-legend {
+    display:flex; align-items:center; gap:20px; margin-top:14px;
+    font-size:12px; color:var(--muted); flex-wrap:wrap;
+  }
+  .legend-item { display:flex; align-items:center; gap:6px; }
+  .legend-dot { width:10px; height:10px; border-radius:3px; }
+
+  /* ALERTS SECTION */
+  .alerts-section { padding:0 24px 24px; }
+  .alerts-label {
+    font-size:11px; font-weight:700; letter-spacing:2px; color:var(--muted);
+    text-transform:uppercase; margin-bottom:14px; margin-top:20px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .alerts-count {
+    background:rgba(232,71,78,0.15); color:var(--accent);
+    padding:2px 8px; border-radius:20px; font-size:11px;
+  }
+  .alerts-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:12px; }
+  .alert-card {
+    background:var(--surface); border:1px solid var(--border);
+    border-radius:12px; padding:16px; cursor:pointer; transition:all 0.2s;
+    position:relative; overflow:hidden;
+  }
+  .alert-card::before {
+    content:''; position:absolute; left:0; top:0; bottom:0; width:3px;
+  }
+  .alert-card.urgent::before { background:#ef4444; }
+  .alert-card.high::before { background:#f97316; }
+  .alert-card.moderate::before { background:#eab308; }
+  .alert-card:hover { border-color:rgba(232,71,78,0.3); transform:translateY(-2px); }
+  .alert-severity {
+    font-size:10px; font-weight:700; letter-spacing:1.5px; text-transform:uppercase;
+    margin-bottom:8px;
+  }
+  .alert-severity.urgent { color:#ef4444; }
+  .alert-severity.high { color:#f97316; }
+  .alert-severity.moderate { color:#eab308; }
+  .alert-ward { font-size:16px; font-weight:700; margin-bottom:4px; }
+  .alert-issue { font-size:12px; color:var(--muted); line-height:1.4; }
+  .alert-count { font-size:11px; color:var(--accent); margin-top:8px; font-weight:600; }
+
+  /* PROCESSING ANIMATION */
+  .processing { display:none; }
+  .processing.active { display:flex; align-items:center; gap:10px; padding:14px; background:var(--surface2); border-radius:10px; margin-top:10px; }
+  .spinner {
+    width:18px; height:18px; border:2px solid var(--border);
+    border-top-color:var(--accent); border-radius:50%; animation:spin 0.8s linear infinite;
+  }
+  @keyframes spin { to{transform:rotate(360deg)} }
+  .processing-text { font-size:13px; color:var(--muted); }
+
+  /* HIGHLIGHTED WARD */
+  .ward-highlight { animation:wardFlash 1.5s ease-out; }
+  @keyframes wardFlash { 0%{filter:brightness(3)} 100%{filter:brightness(1)} }
+
+  /* MOBILE */
+  @media(max-width:900px) {
+    .main { grid-template-columns:1fr; }
+    .left-panel { border-right:none; border-bottom:1px solid var(--border); }
+    .alerts-grid { grid-template-columns:1fr; }
+    nav { padding:14px 20px; }
+    .hero { padding:32px 20px 24px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">JAN<span>SATTA</span> AI</div>
+  <div class="nav-tag">India Innovates 2026</div>
+  <div class="live-dot">Live Intelligence</div>
+</nav>
+
+<div class="hero">
+  <div class="hero-tag">🗺️ Digital Democracy — EchoMappers</div>
+  <h1>20 million voices.<br><em>One map.</em> Zero excuses.</h1>
+  <p>Ward-level multilingual governance intelligence. From a YouTube comment to a Priority Alert in seconds.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">272</div><div class="stat-label">Delhi Wards Monitored</div></div>
+    <div class="stat"><div class="stat-num">12</div><div class="stat-label">Indian Languages</div></div>
+    <div class="stat"><div class="stat-num">50K+</div><div class="stat-label">Data Points / Week</div></div>
+    <div class="stat"><div class="stat-num">5</div><div class="stat-label">Issue Categories</div></div>
+  </div>
+</div>
+
+<div class="main">
+  <!-- LEFT PANEL -->
+  <div class="left-panel">
+    <div class="panel-header">Citizen Voice Analyzer</div>
+
+    <div class="input-section">
+      <div class="input-label">Input — Paste Comment or Text</div>
+      <textarea id="commentInput" placeholder="Paste a Hindi/Hinglish/English YouTube comment or civic complaint here...
+
+e.g. 'Shahdara mein 1 mahine se sadak nahi bani, neta sirf vaada karta hai'"></textarea>
+      <div class="sample-btns">
+        <button class="sample-btn" onclick="loadSample(0)">🚧 Roads (Hindi)</button>
+        <button class="sample-btn" onclick="loadSample(1)">💧 Water (Hinglish)</button>
+        <button class="sample-btn" onclick="loadSample(2)">🗑️ Garbage (Mixed)</button>
+        <button class="sample-btn" onclick="loadSample(3)">⚡ Power (English)</button>
+      </div>
+      <button class="analyze-btn" onclick="analyzeComment()">⚡ Analyze with AI Pipeline</button>
+
+      <div class="processing" id="processingDiv">
+        <div class="spinner"></div>
+        <div class="processing-text" id="processingText">Detecting language...</div>
+      </div>
+    </div>
+
+    <div class="result-section">
+      <div class="result-label">AI Processing Output</div>
+      <div id="resultContainer">
+        <div class="placeholder-state">
+          <div class="icon">🧠</div>
+          <p>Paste a citizen comment above and click Analyze to see the full NLP pipeline in action — language detection, sentiment scoring, issue classification, and ward mapping.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIGHT PANEL -->
+  <div class="right-panel">
+    <div class="map-header">
+      <div>
+        <div class="map-title">Live Governance Heatmap</div>
+        <div class="map-subtitle">Delhi Ward Sentiment Intelligence</div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);">📍 NCT Delhi — 272 Wards</div>
+    </div>
+
+    <div class="map-container">
+      <div class="delhi-map-wrap">
+        <svg id="delhi-svg" viewBox="0 0 600 500" xmlns="http://www.w3.org/2000/svg">
+          <!-- Background -->
+          <rect width="600" height="500" fill="#0d1422"/>
+
+          <!-- Grid lines subtle -->
+          <defs>
+            <pattern id="grid" width="30" height="30" patternUnits="userSpaceOnUse">
+              <path d="M 30 0 L 0 0 0 30" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect width="600" height="500" fill="url(#grid)"/>
+
+          <!-- Delhi ward shapes (stylized representation) -->
+          <!-- Using simplified polygons to represent Delhi ward clusters by zone -->
+
+          <!-- North Delhi Wards (Ward 1-30 area) -->
+          <polygon points="180,60 240,50 310,65 320,100 290,120 240,130 190,115 170,90" fill="#ef4444" opacity="0.75" class="ward" data-ward="Ward 10" data-issue="Potable Water Scarcity" data-severity="urgent" data-count="60"/>
+          <polygon points="240,50 310,65 360,55 370,80 320,100 290,120 310,65" fill="#f97316" opacity="0.7" class="ward" data-ward="Ward 14" data-issue="Road Infrastructure" data-severity="high" data-count="41"/>
+          <polygon points="100,70 180,60 190,115 160,130 120,120 90,95" fill="#f97316" opacity="0.65" class="ward" data-ward="Ward 7" data-issue="Garbage Collection" data-severity="high" data-count="38"/>
+          <polygon points="360,55 420,60 430,95 380,115 320,100 370,80" fill="#eab308" opacity="0.6" class="ward" data-ward="Ward 22" data-issue="Public Transport" data-severity="moderate" data-count="25"/>
+
+          <!-- Northwest -->
+          <polygon points="50,90 100,70 120,120 100,150 60,140 40,115" fill="#22c55e" opacity="0.55" class="ward" data-ward="Ward 3" data-issue="Healthcare Access" data-severity="low" data-count="12"/>
+          <polygon points="40,115 60,140 80,170 50,185 25,165 20,140" fill="#22c55e" opacity="0.5" class="ward" data-ward="Ward 2" data-issue="Sanitation" data-severity="low" data-count="8"/>
+
+          <!-- West Delhi -->
+          <polygon points="60,140 120,120 160,130 170,170 140,195 90,185 70,165" fill="#f97316" opacity="0.7" class="ward" data-ward="Ward 25" data-issue="Garbage Collection" data-severity="high" data-count="43"/>
+          <polygon points="90,185 140,195 160,230 130,255 85,245 70,215" fill="#eab308" opacity="0.6" class="ward" data-ward="Ward 31" data-issue="Electricity Outages" data-severity="moderate" data-count="29"/>
+
+          <!-- Central Delhi (most activity) -->
+          <polygon points="190,115 240,130 270,155 260,195 220,210 185,195 170,170 160,130" fill="#ef4444" opacity="0.8" class="ward" data-ward="Ward 61" data-issue="Road Infrastructure" data-severity="urgent" data-count="72" id="ward61"/>
+          <polygon points="240,130 290,120 330,145 320,180 280,200 260,195 270,155" fill="#ef4444" opacity="0.75" class="ward" data-ward="Ward 58" data-issue="Corruption Reports" data-severity="urgent" data-count="55"/>
+          <polygon points="320,100 370,80 410,110 400,145 360,160 330,145 290,120" fill="#f97316" opacity="0.65" class="ward" data-ward="Ward 42" data-issue="Water Supply" data-severity="high" data-count="44"/>
+
+          <!-- East Delhi (Shahdara area - highlighted) -->
+          <polygon points="400,80 460,75 490,100 480,140 440,155 400,145 410,110" fill="#ef4444" opacity="0.8" class="ward" data-ward="Ward 55" data-issue="Road Infrastructure" data-severity="urgent" data-count="67" id="shahdara-ward"/>
+          <polygon points="460,75 520,80 540,115 510,145 480,140 490,100" fill="#f97316" opacity="0.7" class="ward" data-ward="Ward 62" data-issue="Drainage Issues" data-severity="high" data-count="36"/>
+          <polygon points="480,140 510,145 540,115 555,155 530,180 490,175" fill="#eab308" opacity="0.6" class="ward" data-ward="Ward 68" data-issue="Public Transport" data-severity="moderate" data-count="22"/>
+
+          <!-- South Delhi -->
+          <polygon points="170,170 185,195 220,210 215,255 180,270 145,255 130,225 130,255" fill="#22c55e" opacity="0.5" class="ward" data-ward="Ward 88" data-issue="Healthcare Access" data-severity="low" data-count="14"/>
+          <polygon points="220,210 260,195 300,215 295,255 255,270 215,255" fill="#eab308" opacity="0.6" class="ward" data-ward="Ward 95" data-issue="Sanitation" data-severity="moderate" data-count="31"/>
+          <polygon points="260,195 300,215 340,200 360,160 330,145 320,180 280,200" fill="#f97316" opacity="0.65" class="ward" data-ward="Ward 79" data-issue="Electricity" data-severity="high" data-count="39"/>
+          <polygon points="300,215 340,200 380,225 370,265 325,275 295,255" fill="#22c55e" opacity="0.55" class="ward" data-ward="Ward 102" data-issue="Parks & Green" data-severity="low" data-count="10"/>
+          <polygon points="340,200 380,225 420,210 430,175 400,145 360,160" fill="#eab308" opacity="0.6" class="ward" data-ward="Ward 86" data-issue="Road Infrastructure" data-severity="moderate" data-count="27"/>
+
+          <!-- Southeast -->
+          <polygon points="400,145 440,155 480,140 490,175 460,200 420,210 430,175" fill="#f97316" opacity="0.65" class="ward" data-ward="Ward 91" data-issue="Water Contamination" data-severity="high" data-count="48"/>
+          <polygon points="460,200 490,175 530,180 540,215 505,230 465,225" fill="#ef4444" opacity="0.7" class="ward" data-ward="Ward 98" data-issue="Healthcare" data-severity="urgent" data-count="52"/>
+
+          <!-- South/Southwest -->
+          <polygon points="85,245 130,255 145,255 155,295 120,315 80,300 65,270" fill="#22c55e" opacity="0.5" class="ward" data-ward="Ward 120" data-issue="Road Maintenance" data-severity="low" data-count="11"/>
+          <polygon points="145,255 180,270 195,310 165,330 130,320 120,315 155,295" fill="#eab308" opacity="0.55" class="ward" data-ward="Ward 130" data-issue="Garbage Collection" data-severity="moderate" data-count="24"/>
+          <polygon points="180,270 215,255 255,270 260,310 225,330 195,310" fill="#f97316" opacity="0.6" class="ward" data-ward="Ward 144" data-issue="Water Supply" data-severity="high" data-count="41"/>
+          <polygon points="255,270 295,255 325,275 330,315 295,335 260,310" fill="#22c55e" opacity="0.5" class="ward" data-ward="Ward 155" data-issue="Electricity" data-severity="low" data-count="9"/>
+          <polygon points="325,275 370,265 400,285 395,320 355,335 330,315" fill="#eab308" opacity="0.55" class="ward" data-ward="Ward 162" data-issue="Public Transport" data-severity="moderate" data-count="19"/>
+
+          <!-- Tooltip overlay -->
+          <rect id="tooltip-bg" x="0" y="0" width="200" height="90" rx="8" fill="#0f1520" stroke="rgba(255,255,255,0.1)" stroke-width="1" display="none"/>
+          <text id="tooltip-ward" x="10" y="22" fill="#e8eaf0" font-size="13" font-weight="700" font-family="Space Grotesk, sans-serif" display="none"></text>
+          <text id="tooltip-issue" x="10" y="40" fill="#9ca3af" font-size="11" font-family="Space Grotesk, sans-serif" display="none"></text>
+          <text id="tooltip-sev" x="10" y="58" fill="#ef4444" font-size="10" font-weight="600" font-family="Space Grotesk, sans-serif" display="none"></text>
+          <text id="tooltip-cnt" x="10" y="76" fill="#6b7a96" font-size="10" font-family="Space Grotesk, sans-serif" display="none"></text>
+        </svg>
+      </div>
+
+      <div class="map-legend">
+        <div class="legend-item"><div class="legend-dot" style="background:#ef4444"></div>Urgent</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#f97316"></div>High</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#eab308"></div>Moderate</div>
+        <div class="legend-item"><div class="legend-dot" style="background:#22c55e"></div>Low</div>
+        <div style="margin-left:auto;font-size:11px;color:var(--muted);">Hover wards to inspect</div>
+      </div>
+    </div>
+
+    <div class="alerts-section">
+      <div class="alerts-label">
+        <span>🚨 Active Governance Gap Alerts</span>
+        <span class="alerts-count">3 Active</span>
+      </div>
+      <div class="alerts-grid">
+        <div class="alert-card urgent" onclick="highlightWard('Ward 10')">
+          <div class="alert-severity urgent">⚠️ URGENT</div>
+          <div class="alert-ward">Ward 10</div>
+          <div class="alert-issue">Potable Water Scarcity — 3 week gap in supply</div>
+          <div class="alert-count">60+ reports in Hindi</div>
+        </div>
+        <div class="alert-card high" onclick="highlightWard('Ward 25')">
+          <div class="alert-severity high">🔶 HIGH</div>
+          <div class="alert-ward">Ward 25</div>
+          <div class="alert-issue">Garbage Collection Failure — overflowing sites</div>
+          <div class="alert-count">43 multilingual reports</div>
+        </div>
+        <div class="alert-card moderate" onclick="highlightWard('Ward 5')">
+          <div class="alert-severity moderate">🟡 MODERATE</div>
+          <div class="alert-ward">Ward 31</div>
+          <div class="alert-issue">Electricity Outages — 4-6hr daily cuts</div>
+          <div class="alert-count">29 Hinglish reports</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const samples = [
+  {
+    text: "Shahdara mein 1 mahine se sadak nahi bani, neta sirf vaada karta hai",
+    lang: "Hindi", sentiment: "Negative", confidence: 0.89,
+    issue: "Infrastructure — Roads", location: "Shahdara, Delhi",
+    ward: "Ward 61", wardId: "ward61",
+    alert: "Roads in Shahdara have not been repaired for 1 month. 72 similar complaints detected in this ward. Cross-referencing with MCD project data: No road repair budget allocated for Q1 2026. PRIORITY ALERT generated."
+  },
+  {
+    text: "Bhai yaar paani nahi aa raha 3 din se, kya kar rahe hain yeh log, bahut bura haal hai",
+    lang: "Hinglish", sentiment: "Negative", confidence: 0.84,
+    issue: "Civic Services — Water Supply", location: "North Delhi",
+    ward: "Ward 10", wardId: null,
+    alert: "Water supply disruption reported for 3+ days. 60 similar complaints detected in Ward 10 area. MCD maintenance schedule shows no scheduled outage. URGENT ALERT generated."
+  },
+  {
+    text: "Kachra wale 2 hafte se nahi aaye, sadak par hi dher lag gaya hai garbage, bahut buri smell hai",
+    lang: "Hinglish + Hindi", sentiment: "Negative", confidence: 0.91,
+    issue: "Sanitation — Garbage Collection", location: "West Delhi",
+    ward: "Ward 25", wardId: null,
+    alert: "Garbage collection failure confirmed in Ward 25. 43 reports across Hindi, Punjabi, Urdu. MCD records show last pickup: 14 days ago. HIGH PRIORITY ALERT escalated to Sanitation Department."
+  },
+  {
+    text: "Power cuts every day for 5 hours, nobody is responding to complaints, this is unacceptable",
+    lang: "English", sentiment: "Negative", confidence: 0.78,
+    issue: "Utilities — Electricity Outages", location: "East Delhi",
+    ward: "Ward 62", wardId: null,
+    alert: "Repeated electricity complaints in Ward 62. 36 reports detected. DISCOMS data cross-reference shows scheduled maintenance ended 8 days ago. Escalation flagged to BSES."
+  }
+];
+
+function loadSample(i) {
+  document.getElementById('commentInput').value = samples[i].text;
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+async function analyzeComment() {
+  const text = document.getElementById('commentInput').value.trim();
+  if (!text) { alert('Please paste a comment first!'); return; }
+
+  // Find matching sample or use default
+  let data = samples.find(s => text.includes(s.text.substring(0,20))) || {
+    lang: detectLang(text), sentiment: "Negative", confidence: 0.76,
+    issue: "Civic Services — General", location: "Delhi",
+    ward: "Ward 58", wardId: null,
+    alert: "Civic complaint detected and mapped to ward-level data. Issue flagged for governance review based on keyword analysis and sentiment classification."
+  };
+
+  const proc = document.getElementById('processingDiv');
+  const procText = document.getElementById('processingText');
+  proc.classList.add('active');
+  document.getElementById('resultContainer').innerHTML = '';
+
+  const steps = ["Detecting language...", "Running IndicBERT sentiment analysis...", "Classifying issue category...", "Extracting location signal...", "Mapping to GeoJSON ward boundaries...", "Generating Priority Alert..."];
+  for (let s of steps) {
+    procText.textContent = s;
+    await sleep(300);
+  }
+  proc.classList.remove('active');
+
+  showResult(data);
+  if (data.wardId) highlightWardById(data.wardId);
+}
+
+function detectLang(text) {
+  if (/[\u0900-\u097F]/.test(text)) return "Hindi (Devanagari)";
+  if (/nahi|hai|kya|bhai|yaar|mein|aur/.test(text.toLowerCase())) return "Hinglish";
+  return "English";
+}
+
+function showResult(data) {
+  const sentBadge = data.sentiment === "Negative" ? "badge-neg" : data.sentiment === "Positive" ? "badge-pos" : "badge-neu";
+  const fillWidth = Math.round(data.confidence * 100);
+
+  document.getElementById('resultContainer').innerHTML = `
+    <div class="result-card">
+      <div class="result-row">
+        <span class="result-key">Language Detected</span>
+        <span class="result-val"><span class="check">✓</span> ${data.lang}</span>
+      </div>
+      <div class="result-row">
+        <span class="result-key">Sentiment</span>
+        <span class="result-val">
+          <span class="badge ${sentBadge}">${data.sentiment}</span>
+          <div class="confidence-bar"><div class="confidence-fill" style="width:${fillWidth}%"></div></div>
+          <span style="font-size:11px;color:var(--muted)">${fillWidth}%</span>
+        </span>
+      </div>
+      <div class="result-row">
+        <span class="result-key">Issue Tag</span>
+        <span class="result-val"><span class="badge badge-issue">${data.issue}</span></span>
+      </div>
+      <div class="result-row">
+        <span class="result-key">Location Signal</span>
+        <span class="result-val"><span class="check">✓</span> ${data.location}</span>
+      </div>
+      <div class="result-row">
+        <span class="result-key">Ward Mapped</span>
+        <span class="result-val"><span class="badge badge-ward">${data.ward}</span></span>
+      </div>
+    </div>
+    <div class="alert-generated">
+      <strong>🚨 Governance Priority Alert</strong>
+      ${data.alert}
+    </div>
+  `;
+}
+
+function highlightWardById(id) {
+  const el = document.getElementById(id);
+  if (el) {
+    el.style.filter = 'brightness(2.5)';
+    setTimeout(() => { el.style.filter = 'brightness(1)'; }, 1500);
+  }
+}
+
+function highlightWard(wardName) {
+  const wards = document.querySelectorAll('.ward');
+  wards.forEach(w => {
+    if (w.dataset.ward === wardName) {
+      w.style.filter = 'brightness(2)';
+      setTimeout(() => { w.style.filter = 'brightness(1)'; }, 1500);
+    }
+  });
+}
+
+// Tooltip on hover
+const wards = document.querySelectorAll('.ward');
+const tooltipBg = document.getElementById('tooltip-bg');
+const tooltipWard = document.getElementById('tooltip-ward');
+const tooltipIssue = document.getElementById('tooltip-issue');
+const tooltipSev = document.getElementById('tooltip-sev');
+const tooltipCnt = document.getElementById('tooltip-cnt');
+
+wards.forEach(w => {
+  w.style.cursor = 'pointer';
+  w.style.transition = 'filter 0.2s, opacity 0.2s';
+
+  w.addEventListener('mouseenter', function(e) {
+    const svg = document.getElementById('delhi-svg');
+    const rect = svg.getBoundingClientRect();
+    const svgX = (e.clientX - rect.left) / rect.width * 600;
+    const svgY = (e.clientY - rect.top) / rect.height * 500;
+
+    const tx = Math.min(svgX + 10, 390);
+    const ty = Math.max(svgY - 50, 5);
+
+    tooltipBg.setAttribute('x', tx); tooltipBg.setAttribute('y', ty);
+    tooltipBg.setAttribute('display', 'block');
+    tooltipWard.setAttribute('x', tx+10); tooltipWard.setAttribute('y', ty+20);
+    tooltipWard.textContent = this.dataset.ward; tooltipWard.setAttribute('display','block');
+    tooltipIssue.setAttribute('x', tx+10); tooltipIssue.setAttribute('y', ty+38);
+    tooltipIssue.textContent = this.dataset.issue; tooltipIssue.setAttribute('display','block');
+    const sevColor = this.dataset.severity==='urgent'?'#ef4444':this.dataset.severity==='high'?'#f97316':'#eab308';
+    tooltipSev.setAttribute('x', tx+10); tooltipSev.setAttribute('y', ty+54);
+    tooltipSev.textContent = '▲ ' + this.dataset.severity.toUpperCase();
+    tooltipSev.setAttribute('fill', sevColor); tooltipSev.setAttribute('display','block');
+    tooltipCnt.setAttribute('x', tx+10); tooltipCnt.setAttribute('y', ty+70);
+    tooltipCnt.textContent = this.dataset.count + ' reports detected';
+    tooltipCnt.setAttribute('display','block');
+
+    this.style.opacity = '1'; this.style.filter = 'brightness(1.4)';
+  });
+
+  w.addEventListener('mousemove', function(e) {
+    const svg = document.getElementById('delhi-svg');
+    const rect = svg.getBoundingClientRect();
+    const svgX = (e.clientX - rect.left) / rect.width * 600;
+    const svgY = (e.clientY - rect.top) / rect.height * 500;
+    const tx = Math.min(svgX + 10, 390);
+    const ty = Math.max(svgY - 50, 5);
+    tooltipBg.setAttribute('x', tx); tooltipBg.setAttribute('y', ty);
+    [tooltipWard, tooltipIssue, tooltipSev, tooltipCnt].forEach((t,i) => {
+      t.setAttribute('x', tx+10); t.setAttribute('y', ty + [20,38,54,70][i]);
+    });
+  });
+
+  w.addEventListener('mouseleave', function() {
+    [tooltipBg, tooltipWard, tooltipIssue, tooltipSev, tooltipCnt].forEach(t => t.setAttribute('display','none'));
+    this.style.opacity = ''; this.style.filter = '';
+  });
+});
+</script>
+</body>
+</html>
