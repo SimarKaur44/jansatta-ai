@@ -22,4 +22,3 @@ Jansatta AI turns the unheard voices of citizens into a real-time map of urgent 
 ## Team
 - Simarpreet Kaur
 - Hariom Srivastava  
-- Prachi Rautela
