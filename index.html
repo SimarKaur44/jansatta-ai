@@ -321,10 +321,10 @@ geojsonLayer = L.geoJSON(DELHI_GEOJSON, {
       const sev = p.severity || 'low';
       const sevColors = {urgent:'#ff4d4d',high:'#ff8c00',moderate:'#ffd600',low:'#00e676'};
       this._tooltip = L.tooltip({className:'ward-tooltip', permanent:false, sticky:true})
-        .setContent(\`<div style="font-weight:700;font-size:13px;margin-bottom:4px;">\${p.Ward_Name}</div>
-          <div style="color:#5a6a82;font-size:11px;margin-bottom:3px;">\${p.issue}</div>
-          <div style="color:\${sevColors[sev]};font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">\${sev.toUpperCase()}</div>
-          <div style="color:#5a6a82;font-size:10px;margin-top:3px;">\${p.report_count} reports detected</div>\`)
+        .setContent(`<div style="font-weight:700;font-size:13px;margin-bottom:4px;">${p.Ward_Name}</div>
+               <div style="color:#5a6a82;font-size:11px;margin-bottom:3px;">${p.issue}</div>
+               <div style="color:${sevColors[sev]};font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;">${sev.toUpperCase()}</div>
+               <div style="color:#5a6a82;font-size:10px;margin-top:3px;">${p.report_count} reports detected</div>`)
         .addTo(map);
       this._tooltip.setLatLng(e.latlng);
     });
@@ -405,7 +405,7 @@ Respond ONLY with valid JSON, no markdown, no extra text:
   "alert_message": "2 sentence governance priority alert explaining the issue and recommended action",
   "severity": "urgent|high|moderate|low"
 }\`,
-        messages:[{role:"user", content: \`Analyze this civic complaint: "\${text}"\`}]
+        messages:[{role:"user", content: `Analyze this civic complaint: "${text}"`}]
       })
     });
     const data = await response.json();
