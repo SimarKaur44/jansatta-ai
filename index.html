@@ -437,7 +437,7 @@ function getFallback(text) {
 
 function showResult(r) {
   const fill = Math.round((r.confidence||0.8)*100);
-  document.getElementById('resultBox').innerHTML = \`
+  document.getElementById('resultBox').innerHTML = `
     <div class="result-grid">
       <div class="result-row"><span class="rk">Language</span><span class="rv"><span class="check-icon">✓</span> \${r.language}</span></div>
       <div class="result-row"><span class="rk">Sentiment</span><span class="rv"><span class="badge b-neg">\${r.sentiment}</span><div class="conf-bar"><div class="conf-fill" style="width:\${fill}%"></div></div><span style="font-size:10px;color:var(--muted)">\${fill}%</span></span></div>
@@ -446,7 +446,7 @@ function showResult(r) {
       <div class="result-row"><span class="rk">Ward Mapped</span><span class="rv"><span class="badge b-ward">\${r.ward_name}</span></span></div>
     </div>
     <div class="alert-box"><strong>🚨 Priority Alert Generated</strong>\${r.alert_message}</div>
-  \`;
+  `;
   document.getElementById('resultBox').classList.add('show');
 }
 </script>
