@@ -117,45 +117,13 @@ nav{
 .lang-bar{height:100%;border-radius:2px;}
 .lang-pct{color:var(--muted);font-size:11px;width:30px;text-align:right;}
 
-/* RECENT REPORTS / LIVE FEED */
-.feed-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
-.feed-controls{display:flex;align-items:center;gap:10px;}
-.feed-toggle{
-  display:flex;align-items:center;gap:7px;
-  font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
-  color:var(--green);cursor:pointer;background:rgba(0,230,118,0.07);
-  border:1px solid rgba(0,230,118,0.18);border-radius:20px;padding:5px 12px;
-  transition:all 0.2s;user-select:none;
-}
-.feed-toggle.paused{color:var(--muted);background:rgba(255,255,255,0.03);border-color:var(--border);}
-.feed-toggle::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1s infinite;flex-shrink:0;}
-.feed-toggle.paused::before{background:var(--muted);animation:none;}
-.feed-count{font-size:11px;color:var(--muted);padding:5px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;}
-
-.report-list{display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto;overflow-x:hidden;position:relative;}
-.report-list::-webkit-scrollbar{width:3px;}
-.report-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-
+/* RECENT REPORTS */
+.report-list{display:flex;flex-direction:column;gap:8px;}
 .report-item{
   background:var(--surface2);border-radius:10px;padding:12px 14px;
   border-left:3px solid;font-size:12px;
-  transform-origin:top center;
 }
-.report-item.new-entry{
-  animation:slideInFeed 0.45s cubic-bezier(0.22,1,0.36,1) forwards;
-}
-@keyframes slideInFeed{
-  from{opacity:0;transform:translateY(-12px) scaleY(0.92);max-height:0;margin-bottom:0;}
-  to{opacity:1;transform:translateY(0) scaleY(1);max-height:200px;margin-bottom:0;}
-}
-.report-item.flash{animation:slideInFeed 0.45s cubic-bezier(0.22,1,0.36,1) forwards, flashGlow 1.2s ease forwards;}
-@keyframes flashGlow{
-  0%{box-shadow:0 0 0 0 rgba(255,77,77,0);}
-  20%{box-shadow:0 0 0 3px rgba(255,77,77,0.25),0 0 20px rgba(255,77,77,0.1);}
-  100%{box-shadow:0 0 0 0 rgba(255,77,77,0);}
-}
-
-.report-top{display:flex;justify-content:space-between;margin-bottom:5px;align-items:center;}
+.report-top{display:flex;justify-content:space-between;margin-bottom:5px;}
 .report-ward{font-weight:700;font-size:13px;}
 .report-time{color:var(--muted);font-size:10px;}
 .report-text{color:var(--muted);font-style:italic;margin-bottom:4px;line-height:1.5;}
@@ -165,30 +133,6 @@ nav{
 .tag-issue{background:rgba(255,140,0,0.1);color:var(--orange);}
 .tag-sev-urgent{background:rgba(255,77,77,0.1);color:var(--accent);}
 .tag-sev-high{background:rgba(255,140,0,0.1);color:var(--orange);}
-.tag-sev-moderate{background:rgba(255,214,0,0.1);color:var(--yellow);}
-
-/* NEW badge */
-.badge-new{
-  font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
-  background:var(--accent);color:#fff;padding:2px 6px;border-radius:4px;
-  animation:fadeOutNew 3s ease 2s forwards;
-}
-@keyframes fadeOutNew{to{opacity:0;width:0;padding:0;overflow:hidden;}}
-
-/* Ticker at bottom */
-.feed-ticker{
-  margin-top:14px;padding:10px 14px;
-  background:rgba(255,77,77,0.04);border:1px solid rgba(255,77,77,0.1);
-  border-radius:8px;display:flex;align-items:center;gap:10px;overflow:hidden;
-}
-.ticker-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;flex-shrink:0;}
-.ticker-track{flex:1;overflow:hidden;}
-.ticker-inner{
-  display:flex;gap:48px;white-space:nowrap;
-  animation:tickerScroll 30s linear infinite;
-  font-size:11px;color:var(--muted);
-}
-@keyframes tickerScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
 
 /* TECH STACK */
 .tech-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
@@ -331,16 +275,10 @@ nav{
     </div>
   </div>
 
-  <!-- LIVE FEED -->
+  <!-- RECENT REPORTS -->
   <div class="card animate d5" style="margin-bottom:20px;">
-    <div class="feed-header-row">
-      <div class="card-title" style="margin-bottom:0">Citizen Reports</div>
-      <div class="feed-controls">
-        <span class="feed-count" id="feedCount">4 reports</span>
-        <div class="feed-toggle" id="feedToggle" onclick="toggleFeed()">Live Feed</div>
-      </div>
-    </div>
-    <div class="report-list" id="reportList">
+    <div class="card-title">Recent Citizen Reports <span style="color:var(--muted);font-weight:400;font-size:10px;letter-spacing:0">Live Feed</span></div>
+    <div class="report-list">
       <div class="report-item" style="border-color:#ff4d4d;">
         <div class="report-top"><span class="report-ward">SHAHDARA</span><span class="report-time">2 min ago</span></div>
         <div class="report-text">"Shahdara mein 1 mahine se sadak nahi bani, neta sirf vaada karta hai"</div>
@@ -376,12 +314,6 @@ nav{
           <span class="tag tag-issue">Electricity Outages</span>
           <span class="tag tag-sev-high">HIGH</span>
         </div>
-      </div>
-    </div>
-    <div class="feed-ticker">
-      <span class="ticker-label">⚡ Feed</span>
-      <div class="ticker-track">
-        <div class="ticker-inner" id="tickerInner"></div>
       </div>
     </div>
   </div>
@@ -422,123 +354,6 @@ issues.forEach(iss => {
     <span class="issue-count" style="color:${iss.color}">${iss.count}</span>
   </div>`;
 });
-
-// ===================== LIVE FEED SIMULATION =====================
-const FEED_POOL = [
-  {ward:'MUSTAFABAD',text:'"Naali ka paani sadak par aa gaya hai, ghar mein ghusne ka darr hai"',lang:'Hindi',issue:'Drainage Issues',sev:'urgent',color:'#ff4d4d'},
-  {ward:'BURARI',text:'"Street lights band hain 1 hafte se, raat ko bahut andher, chor ka darr"',lang:'Hinglish',issue:'Electricity Outages',sev:'high',color:'#ff8c00'},
-  {ward:'TRILOKPURI',text:'"Hospital mein doctor nahi milta, ghante bhar wait karna padta hai emergency mein"',lang:'Hindi',issue:'Healthcare',sev:'urgent',color:'#ff4d4d'},
-  {ward:'PATPARGANJ',text:'"Bus number 419 last 2 days not coming, people late for work daily"',lang:'English',issue:'Public Transport',sev:'moderate',color:'#ffd600'},
-  {ward:'KARAWAL NAGAR',text:'"Sarkari contractor ne kaam aadha chhod diya, 3 mahine baad bhi nahi aaya"',lang:'Hindi',issue:'Corruption Reports',sev:'high',color:'#ff8c00'},
-  {ward:'GOKALPUR',text:'"Water pressure bilkul nahi hai, oopar floor walon ko paani hi nahi milta"',lang:'Hinglish',issue:'Water Supply',sev:'urgent',color:'#ff4d4d'},
-  {ward:'SEEMAPURI',text:'"Park mein garbage dump ban gaya hai, bacche khelne nahi ja sakte"',lang:'Hindi',issue:'Garbage Collection',sev:'high',color:'#ff8c00'},
-  {ward:'KONDLI',text:'"Road repairing ke naam par sirf painting ki, kaam kuch nahi hua"',lang:'Hinglish',issue:'Road Infrastructure',sev:'moderate',color:'#ffd600'},
-  {ward:'LAXMI NAGAR',text:'"Public toilet lock rehta hai din mein, koi supervision nahi hai"',lang:'Hindi',issue:'Sanitation',sev:'high',color:'#ff8c00'},
-  {ward:'GANDHI NAGAR',text:'"Transformer blast hua kal raat, abhi tak repair team nahi aayi"',lang:'Hindi',issue:'Electricity Outages',sev:'urgent',color:'#ff4d4d'},
-  {ward:'SHAHDARA',text:'"Sadak ka patchwork 1 hafte mein uth gaya, form bhari lekin koi nahi suna"',lang:'Hinglish',issue:'Road Infrastructure',sev:'high',color:'#ff8c00'},
-  {ward:'SEELAMPUR',text:'"Open sewer near school is a health hazard, children falling sick regularly"',lang:'English',issue:'Drainage Issues',sev:'urgent',color:'#ff4d4d'},
-  {ward:'BABARPUR',text:'"MCD truck aata hai par kachra uthata nahi, sirf dekh ke chala jaata hai"',lang:'Hindi',issue:'Garbage Collection',sev:'moderate',color:'#ffd600'},
-  {ward:'GHONDA',text:'"PWD wale road mein bada khadda bana gaye, koi fill nahi kar raha"',lang:'Hinglish',issue:'Road Infrastructure',sev:'high',color:'#ff8c00'},
-  {ward:'ROHINI EAST',text:'"3 days no water, DJB helpline not responding, this is unacceptable"',lang:'English',issue:'Water Supply',sev:'urgent',color:'#ff4d4d'},
-];
-
-let feedRunning = true;
-let feedInterval = null;
-let reportCount = 4;
-let poolIndex = 0;
-
-function formatTime(){ return 'Just now'; }
-
-function sevTagClass(sev){
-  if(sev==='urgent') return 'tag-sev-urgent';
-  if(sev==='high') return 'tag-sev-high';
-  return 'tag-sev-moderate';
-}
-
-function addReport(item, isNew=true){
-  const list = document.getElementById('reportList');
-  const div = document.createElement('div');
-  div.className = 'report-item' + (isNew ? ' flash' : '');
-  div.style.borderColor = item.color;
-  div.innerHTML = `
-    <div class="report-top">
-      <span class="report-ward">${item.ward} ${isNew ? '<span class="badge-new">NEW</span>' : ''}</span>
-      <span class="report-time">${formatTime()}</span>
-    </div>
-    <div class="report-text">${item.text}</div>
-    <div class="report-tags">
-      <span class="tag tag-lang">${item.lang}</span>
-      <span class="tag tag-issue">${item.issue}</span>
-      <span class="tag ${sevTagClass(item.sev)}">${item.sev.toUpperCase()}</span>
-    </div>`;
-  list.insertBefore(div, list.firstChild);
-  list.scrollTop = 0;
-
-  // Cap at 20 items
-  while(list.children.length > 20) list.removeChild(list.lastChild);
-
-  reportCount++;
-  document.getElementById('feedCount').textContent = `${reportCount} reports`;
-
-  // Update ticker
-  updateTicker(item);
-}
-
-function updateTicker(item){
-  const inner = document.getElementById('tickerInner');
-  const entry = `${item.ward} · ${item.issue} · ${item.sev.toUpperCase()}`;
-  // duplicate content for seamless loop
-  const all = Array.from(inner.querySelectorAll('span')).map(s=>s.textContent);
-  all.unshift(entry);
-  if(all.length > 12) all.pop();
-  const doubled = [...all, ...all];
-  inner.innerHTML = doubled.map(t=>`<span>${t}</span>`).join('');
-}
-
-function startFeed(){
-  feedInterval = setInterval(()=>{
-    const item = FEED_POOL[poolIndex % FEED_POOL.length];
-    poolIndex++;
-    addReport(item, true);
-  }, getRandomInterval());
-}
-
-function getRandomInterval(){
-  return 3500 + Math.random() * 3000; // 3.5–6.5s
-}
-
-function restartFeed(){
-  clearInterval(feedInterval);
-  if(feedRunning) startFeed();
-}
-
-function toggleFeed(){
-  feedRunning = !feedRunning;
-  const btn = document.getElementById('feedToggle');
-  if(feedRunning){
-    btn.textContent = 'Live Feed';
-    btn.classList.remove('paused');
-    startFeed();
-  } else {
-    btn.textContent = 'Paused';
-    btn.classList.add('paused');
-    clearInterval(feedInterval);
-  }
-}
-
-// Init ticker with seed data
-const seedTicker = [
-  'SHAHDARA · Road Infrastructure · URGENT',
-  'ROHINI · Water Supply · URGENT',
-  'CHANDNI CHOWK · Garbage Collection · HIGH',
-  'ROHINI EAST · Electricity Outages · HIGH',
-  'MUSTAFABAD · Drainage Issues · URGENT',
-];
-const doubled = [...seedTicker, ...seedTicker];
-document.getElementById('tickerInner').innerHTML = doubled.map(t=>`<span>${t}</span>`).join('');
-
-// Stagger initial feed start
-setTimeout(() => startFeed(), 1800);
 </script>
 </body>
 </html>
