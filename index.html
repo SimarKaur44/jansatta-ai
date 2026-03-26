@@ -392,7 +392,7 @@ async function analyzeComment() {
       body: JSON.stringify({
         model:"claude-sonnet-4-20250514",
         max_tokens:1000,
-        system: \`You are the Jansatta AI NLP pipeline. Analyze civic complaints from Indian citizens in Hindi, Hinglish, or English.
+        system: `You are the Jansatta AI NLP pipeline. Analyze civic complaints from Indian citizens in Hindi, Hinglish, or English.
 Respond ONLY with valid JSON, no markdown, no extra text:
 {
   "language": "detected language",
@@ -404,7 +404,7 @@ Respond ONLY with valid JSON, no markdown, no extra text:
   "ward_no": "ward number if identifiable",
   "alert_message": "2 sentence governance priority alert explaining the issue and recommended action",
   "severity": "urgent|high|moderate|low"
-}\`,
+}`,
         messages:[{role:"user", content: `Analyze this civic complaint: "${text}"`}]
       })
     });
