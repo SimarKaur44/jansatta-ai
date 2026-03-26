@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Jansatta AI — Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#07090f;--surface:#0d1117;--surface2:#131920;--border:rgba(255,255,255,0.06);
+  --accent:#ff4d4d;--green:#00e676;--yellow:#ffd600;--orange:#ff8c00;
+  --text:#eef0f6;--muted:#5a6a82;
+  --font-head:'Syne',sans-serif;--font-body:'DM Sans',sans-serif;
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{background:var(--bg);color:var(--text);font-family:var(--font-body);min-height:100vh;display:flex;flex-direction:column;}
+
+nav{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 32px;height:56px;border-bottom:1px solid var(--border);
+  background:rgba(7,9,15,0.98);position:sticky;top:0;z-index:100;flex-shrink:0;
+}
+.logo{font-family:var(--font-head);font-size:20px;font-weight:800;letter-spacing:-0.5px;}
+.logo em{color:var(--accent);font-style:normal;}
+.nav-center{display:flex;gap:4px;}
+.nav-btn{
+  padding:7px 18px;border-radius:6px;font-size:13px;font-weight:600;
+  cursor:pointer;border:none;font-family:var(--font-body);transition:all 0.2s;
+  text-decoration:none;display:inline-flex;align-items:center;gap:6px;
+}
+.nav-btn.active{background:var(--accent);color:#fff;}
+.nav-btn:not(.active){background:transparent;color:var(--muted);border:1px solid var(--border);}
+.nav-btn:not(.active):hover{color:var(--text);border-color:rgba(255,255,255,0.15);}
+.live-pill{
+  display:flex;align-items:center;gap:6px;font-size:11px;font-weight:700;
+  letter-spacing:1.5px;color:var(--green);background:rgba(0,230,118,0.08);
+  border:1px solid rgba(0,230,118,0.2);padding:5px 12px;border-radius:20px;text-transform:uppercase;
+}
+.live-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+.page-content{flex:1;padding:32px;max-width:1200px;margin:0 auto;width:100%;}
+
+/* HEADER */
+.page-header{margin-bottom:32px;}
+.page-header h1{font-family:var(--font-head);font-size:32px;font-weight:800;letter-spacing:-1px;margin-bottom:6px;}
+.page-header h1 span{color:var(--accent);}
+.page-header p{color:var(--muted);font-size:14px;}
+
+/* TOP METRICS */
+.metrics-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px;}
+.metric-card{
+  background:var(--surface);border:1px solid var(--border);border-radius:14px;
+  padding:20px;position:relative;overflow:hidden;
+}
+.metric-card::before{
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+}
+.metric-card.red::before{background:var(--accent);}
+.metric-card.orange::before{background:var(--orange);}
+.metric-card.yellow::before{background:var(--yellow);}
+.metric-card.green::before{background:var(--green);}
+.metric-card.blue::before{background:#63b3ff;}
+.metric-num{font-family:var(--font-head);font-size:32px;font-weight:800;margin-bottom:4px;}
+.metric-card.red .metric-num{color:var(--accent);}
+.metric-card.orange .metric-num{color:var(--orange);}
+.metric-card.yellow .metric-num{color:var(--yellow);}
+.metric-card.green .metric-num{color:var(--green);}
+.metric-card.blue .metric-num{color:#63b3ff;}
+.metric-label{font-size:12px;color:var(--muted);}
+.metric-sub{font-size:10px;color:var(--muted);margin-top:4px;opacity:0.6;}
+
+/* TWO COL */
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
+.three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;}
+
+.card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;}
+.card-title{
+  font-size:11px;font-weight:700;letter-spacing:2px;color:var(--muted);
+  text-transform:uppercase;margin-bottom:18px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+
+/* PIPELINE */
+.pipeline{display:flex;align-items:center;gap:0;margin-top:4px;}
+.pipe-step{
+  flex:1;padding:14px 10px;text-align:center;
+  background:var(--surface2);border:1px solid var(--border);
+  position:relative;
+}
+.pipe-step:first-child{border-radius:10px 0 0 10px;}
+.pipe-step:last-child{border-radius:0 10px 10px 0;}
+.pipe-step::after{
+  content:'→';position:absolute;right:-10px;top:50%;transform:translateY(-50%);
+  color:var(--muted);font-size:14px;z-index:1;
+}
+.pipe-step:last-child::after{display:none;}
+.pipe-icon{font-size:20px;margin-bottom:6px;}
+.pipe-name{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:3px;}
+.pipe-tech{font-size:10px;color:var(--muted);}
+
+/* ISSUE BARS */
+.issue-bar-wrap{display:flex;flex-direction:column;gap:10px;}
+.issue-bar-row{display:flex;align-items:center;gap:10px;font-size:12px;}
+.issue-name{width:140px;color:var(--muted);flex-shrink:0;}
+.bar-track{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
+.bar-fill{height:100%;border-radius:3px;transition:width 1s ease;}
+.issue-count{width:30px;text-align:right;font-weight:600;font-size:11px;}
+
+/* LANGUAGE PIE (CSS only) */
+.lang-list{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
+.lang-row{display:flex;align-items:center;justify-content:space-between;font-size:12px;}
+.lang-left{display:flex;align-items:center;gap:10px;}
+.lang-dot{width:10px;height:10px;border-radius:50%;}
+.lang-name{color:var(--text);}
+.lang-bar-wrap{flex:1;margin:0 12px;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
+.lang-bar{height:100%;border-radius:2px;}
+.lang-pct{color:var(--muted);font-size:11px;width:30px;text-align:right;}
+
+/* RECENT REPORTS / LIVE FEED */
+.feed-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.feed-controls{display:flex;align-items:center;gap:10px;}
+.feed-toggle{
+  display:flex;align-items:center;gap:7px;
+  font-size:11px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
+  color:var(--green);cursor:pointer;background:rgba(0,230,118,0.07);
+  border:1px solid rgba(0,230,118,0.18);border-radius:20px;padding:5px 12px;
+  transition:all 0.2s;user-select:none;
+}
+.feed-toggle.paused{color:var(--muted);background:rgba(255,255,255,0.03);border-color:var(--border);}
+.feed-toggle::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1s infinite;flex-shrink:0;}
+.feed-toggle.paused::before{background:var(--muted);animation:none;}
+.feed-count{font-size:11px;color:var(--muted);padding:5px 10px;background:var(--surface2);border:1px solid var(--border);border-radius:20px;}
+
+.report-list{display:flex;flex-direction:column;gap:8px;max-height:420px;overflow-y:auto;overflow-x:hidden;position:relative;}
+.report-list::-webkit-scrollbar{width:3px;}
+.report-list::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
+
+.report-item{
+  background:var(--surface2);border-radius:10px;padding:12px 14px;
+  border-left:3px solid;font-size:12px;
+  transform-origin:top center;
+}
+.report-item.new-entry{
+  animation:slideInFeed 0.45s cubic-bezier(0.22,1,0.36,1) forwards;
+}
+@keyframes slideInFeed{
+  from{opacity:0;transform:translateY(-12px) scaleY(0.92);max-height:0;margin-bottom:0;}
+  to{opacity:1;transform:translateY(0) scaleY(1);max-height:200px;margin-bottom:0;}
+}
+.report-item.flash{animation:slideInFeed 0.45s cubic-bezier(0.22,1,0.36,1) forwards, flashGlow 1.2s ease forwards;}
+@keyframes flashGlow{
+  0%{box-shadow:0 0 0 0 rgba(255,77,77,0);}
+  20%{box-shadow:0 0 0 3px rgba(255,77,77,0.25),0 0 20px rgba(255,77,77,0.1);}
+  100%{box-shadow:0 0 0 0 rgba(255,77,77,0);}
+}
+
+.report-top{display:flex;justify-content:space-between;margin-bottom:5px;align-items:center;}
+.report-ward{font-weight:700;font-size:13px;}
+.report-time{color:var(--muted);font-size:10px;}
+.report-text{color:var(--muted);font-style:italic;margin-bottom:4px;line-height:1.5;}
+.report-tags{display:flex;gap:6px;}
+.tag{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;}
+.tag-lang{background:rgba(99,179,255,0.1);color:#63b3ff;}
+.tag-issue{background:rgba(255,140,0,0.1);color:var(--orange);}
+.tag-sev-urgent{background:rgba(255,77,77,0.1);color:var(--accent);}
+.tag-sev-high{background:rgba(255,140,0,0.1);color:var(--orange);}
+.tag-sev-moderate{background:rgba(255,214,0,0.1);color:var(--yellow);}
+
+/* NEW badge */
+.badge-new{
+  font-size:9px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;
+  background:var(--accent);color:#fff;padding:2px 6px;border-radius:4px;
+  animation:fadeOutNew 3s ease 2s forwards;
+}
+@keyframes fadeOutNew{to{opacity:0;width:0;padding:0;overflow:hidden;}}
+
+/* Ticker at bottom */
+.feed-ticker{
+  margin-top:14px;padding:10px 14px;
+  background:rgba(255,77,77,0.04);border:1px solid rgba(255,77,77,0.1);
+  border-radius:8px;display:flex;align-items:center;gap:10px;overflow:hidden;
+}
+.ticker-label{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--accent);text-transform:uppercase;flex-shrink:0;}
+.ticker-track{flex:1;overflow:hidden;}
+.ticker-inner{
+  display:flex;gap:48px;white-space:nowrap;
+  animation:tickerScroll 30s linear infinite;
+  font-size:11px;color:var(--muted);
+}
+@keyframes tickerScroll{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+
+/* TECH STACK */
+.tech-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
+.tech-item{
+  display:flex;align-items:center;gap:10px;
+  background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;
+}
+.tech-icon{font-size:18px;}
+.tech-name{font-size:12px;font-weight:600;margin-bottom:1px;}
+.tech-desc{font-size:10px;color:var(--muted);}
+
+/* ANIMATE IN */
+@keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
+.animate{animation:fadeUp 0.5s ease forwards;opacity:0;}
+.d1{animation-delay:0.05s;}
+.d2{animation-delay:0.1s;}
+.d3{animation-delay:0.15s;}
+.d4{animation-delay:0.2s;}
+.d5{animation-delay:0.25s;}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">JAN<em>SATTA</em> AI</div>
+  <div class="nav-center">
+    <a href="index.html" class="nav-btn">🗺️ Live Map</a>
+    <a href="page2.html" class="nav-btn active">📊 Dashboard</a>
+  </div>
+  <div class="live-pill">Live</div>
+</nav>
+
+<div class="page-content">
+  <div class="page-header animate d1">
+    <h1>Governance <span>Intelligence</span> Dashboard</h1>
+    <p>Real-time civic sentiment analysis across 290 Delhi wards · Updated every 6 hours</p>
+  </div>
+
+  <!-- TOP METRICS -->
+  <div class="metrics-grid animate d2">
+    <div class="metric-card red">
+      <div class="metric-num">14</div>
+      <div class="metric-label">Urgent Alerts</div>
+      <div class="metric-sub">Require immediate action</div>
+    </div>
+    <div class="metric-card orange">
+      <div class="metric-num">33</div>
+      <div class="metric-label">High Priority</div>
+      <div class="metric-sub">Action within 48 hrs</div>
+    </div>
+    <div class="metric-card yellow">
+      <div class="metric-num">58K</div>
+      <div class="metric-label">Data Points</div>
+      <div class="metric-sub">This week · Delhi NCT</div>
+    </div>
+    <div class="metric-card green">
+      <div class="metric-num">290</div>
+      <div class="metric-label">Wards Covered</div>
+      <div class="metric-sub">100% of Delhi wards</div>
+    </div>
+    <div class="metric-card blue">
+      <div class="metric-num">47ms</div>
+      <div class="metric-label">Avg Response</div>
+      <div class="metric-sub">Comment → Alert time</div>
+    </div>
+  </div>
+
+  <!-- PIPELINE -->
+  <div class="card animate d3" style="margin-bottom:20px;">
+    <div class="card-title">AI Processing Pipeline</div>
+    <div class="pipeline">
+      <div class="pipe-step">
+        <div class="pipe-icon">📥</div>
+        <div class="pipe-name">Ingestion</div>
+        <div class="pipe-tech">YouTube API v3<br>RSS Feeds</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🧠</div>
+        <div class="pipe-name">Language AI</div>
+        <div class="pipe-tech">IndicBERT<br>MuRIL</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🏷️</div>
+        <div class="pipe-name">Classification</div>
+        <div class="pipe-tech">NLP Classifier<br>5 Categories</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🗺️</div>
+        <div class="pipe-name">Geo-Mapping</div>
+        <div class="pipe-tech">Ward GeoJSON<br>Leaflet.js</div>
+      </div>
+      <div class="pipe-step">
+        <div class="pipe-icon">🚨</div>
+        <div class="pipe-name">Alert</div>
+        <div class="pipe-tech">Cross-ref MCD<br>Priority Score</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="two-col animate d4">
+    <!-- ISSUE BREAKDOWN -->
+    <div class="card">
+      <div class="card-title">Issue Category Breakdown <span style="color:var(--accent)">This Week</span></div>
+      <div class="issue-bar-wrap" id="issuesBars"></div>
+    </div>
+
+    <!-- LANGUAGE DISTRIBUTION -->
+    <div class="card">
+      <div class="card-title">Language Distribution</div>
+      <div class="lang-list">
+        <div class="lang-row">
+          <div class="lang-left"><div class="lang-dot" style="background:#ff4d4d"></div><span class="lang-name">Hindi</span></div>
+          <div class="lang-bar-wrap"><div class="lang-bar" style="width:42%;background:#ff4d4d"></div></div>
+          <span class="lang-pct">42%</span>
+        </div>
+        <div class="lang-row">
+          <div class="lang-left"><div class="lang-dot" style="background:#ff8c00"></div><span class="lang-name">Hinglish</span></div>
+          <div class="lang-bar-wrap"><div class="lang-bar" style="width:31%;background:#ff8c00"></div></div>
+          <span class="lang-pct">31%</span>
+        </div>
+        <div class="lang-row">
+          <div class="lang-left"><div class="lang-dot" style="background:#ffd600"></div><span class="lang-name">English</span></div>
+          <div class="lang-bar-wrap"><div class="lang-bar" style="width:14%;background:#ffd600"></div></div>
+          <span class="lang-pct">14%</span>
+        </div>
+        <div class="lang-row">
+          <div class="lang-left"><div class="lang-dot" style="background:#00e676"></div><span class="lang-name">Punjabi</span></div>
+          <div class="lang-bar-wrap"><div class="lang-bar" style="width:8%;background:#00e676"></div></div>
+          <span class="lang-pct">8%</span>
+        </div>
+        <div class="lang-row">
+          <div class="lang-left"><div class="lang-dot" style="background:#63b3ff"></div><span class="lang-name">Urdu</span></div>
+          <div class="lang-bar-wrap"><div class="lang-bar" style="width:5%;background:#63b3ff"></div></div>
+          <span class="lang-pct">5%</span>
+        </div>
+      </div>
+      <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);line-height:1.6;">
+        💡 <strong style="color:var(--text)">Key Insight:</strong> 90% of citizen voice is in regional/mixed languages — completely invisible to existing Twitter-based governance tools.
+      </div>
+    </div>
+  </div>
+
+  <!-- LIVE FEED -->
+  <div class="card animate d5" style="margin-bottom:20px;">
+    <div class="feed-header-row">
+      <div class="card-title" style="margin-bottom:0">Citizen Reports</div>
+      <div class="feed-controls">
+        <span class="feed-count" id="feedCount">4 reports</span>
+        <div class="feed-toggle" id="feedToggle" onclick="toggleFeed()">Live Feed</div>
+      </div>
+    </div>
+    <div class="report-list" id="reportList">
+      <div class="report-item" style="border-color:#ff4d4d;">
+        <div class="report-top"><span class="report-ward">SHAHDARA</span><span class="report-time">2 min ago</span></div>
+        <div class="report-text">"Shahdara mein 1 mahine se sadak nahi bani, neta sirf vaada karta hai"</div>
+        <div class="report-tags">
+          <span class="tag tag-lang">Hindi</span>
+          <span class="tag tag-issue">Road Infrastructure</span>
+          <span class="tag tag-sev-urgent">URGENT</span>
+        </div>
+      </div>
+      <div class="report-item" style="border-color:#ff4d4d;">
+        <div class="report-top"><span class="report-ward">ROHINI</span><span class="report-time">11 min ago</span></div>
+        <div class="report-text">"Bhai paani nahi aa raha 3 din se, kya kar rahe hain yeh log, bahut bura haal"</div>
+        <div class="report-tags">
+          <span class="tag tag-lang">Hinglish</span>
+          <span class="tag tag-issue">Water Supply</span>
+          <span class="tag tag-sev-urgent">URGENT</span>
+        </div>
+      </div>
+      <div class="report-item" style="border-color:#ff8c00;">
+        <div class="report-top"><span class="report-ward">CHANDNI CHOWK</span><span class="report-time">18 min ago</span></div>
+        <div class="report-text">"Kachra wale 2 hafte se nahi aaye, sadak par hi dher lag gaya hai, bahut buri smell"</div>
+        <div class="report-tags">
+          <span class="tag tag-lang">Hindi</span>
+          <span class="tag tag-issue">Garbage Collection</span>
+          <span class="tag tag-sev-high">HIGH</span>
+        </div>
+      </div>
+      <div class="report-item" style="border-color:#ff8c00;">
+        <div class="report-top"><span class="report-ward">ROHINI EAST</span><span class="report-time">34 min ago</span></div>
+        <div class="report-text">"Power cuts every day for 5 hours, nobody is responding to complaints, unacceptable"</div>
+        <div class="report-tags">
+          <span class="tag tag-lang">English</span>
+          <span class="tag tag-issue">Electricity Outages</span>
+          <span class="tag tag-sev-high">HIGH</span>
+        </div>
+      </div>
+    </div>
+    <div class="feed-ticker">
+      <span class="ticker-label">⚡ Feed</span>
+      <div class="ticker-track">
+        <div class="ticker-inner" id="tickerInner"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="card animate d5">
+    <div class="card-title">Technology Stack</div>
+    <div class="tech-grid">
+      <div class="tech-item"><span class="tech-icon">🤖</span><div><div class="tech-name">IndicBERT by AI4Bharat</div><div class="tech-desc">12 Indian languages · 9B token training</div></div></div>
+      <div class="tech-item"><span class="tech-icon">🌐</span><div><div class="tech-name">MuRIL by Google</div><div class="tech-desc">17 Indian languages + transliterations</div></div></div>
+      <div class="tech-item"><span class="tech-icon">🗺️</span><div><div class="tech-name">Leaflet.js + GeoJSON</div><div class="tech-desc">Delhi ward boundaries · data.gov.in</div></div></div>
+      <div class="tech-item"><span class="tech-icon">📺</span><div><div class="tech-name">YouTube Data API v3</div><div class="tech-desc">50,000+ data points/week per city</div></div></div>
+      <div class="tech-item"><span class="tech-icon">⚡</span><div><div class="tech-name">FastAPI + React</div><div class="tech-desc">Backend pipeline · Frontend dashboard</div></div></div>
+      <div class="tech-item"><span class="tech-icon">🏛️</span><div><div class="tech-name">MCD Open Data</div><div class="tech-desc">Cross-reference government project data</div></div></div>
+    </div>
+  </div>
+
+</div><!-- end page-content -->
+
+<script>
+const issues = [
+  {name:'Road Infrastructure', count:847, color:'#ff4d4d'},
+  {name:'Water Supply', count:612, color:'#63b3ff'},
+  {name:'Garbage Collection', count:534, color:'#ff8c00'},
+  {name:'Electricity Outages', count:423, color:'#ffd600'},
+  {name:'Healthcare', count:318, color:'#00e676'},
+  {name:'Corruption Reports', count:276, color:'#a78bfa'},
+  {name:'Public Transport', count:198, color:'#fb7185'},
+  {name:'Sanitation', count:157, color:'#34d399'},
+];
+const max = issues[0].count;
+const container = document.getElementById('issuesBars');
+issues.forEach(iss => {
+  const pct = Math.round(iss.count/max*100);
+  container.innerHTML += `<div class="issue-bar-row">
+    <span class="issue-name">${iss.name}</span>
+    <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${iss.color}"></div></div>
+    <span class="issue-count" style="color:${iss.color}">${iss.count}</span>
+  </div>`;
+});
+
+// ===================== LIVE FEED SIMULATION =====================
+const FEED_POOL = [
+  {ward:'MUSTAFABAD',text:'"Naali ka paani sadak par aa gaya hai, ghar mein ghusne ka darr hai"',lang:'Hindi',issue:'Drainage Issues',sev:'urgent',color:'#ff4d4d'},
+  {ward:'BURARI',text:'"Street lights band hain 1 hafte se, raat ko bahut andher, chor ka darr"',lang:'Hinglish',issue:'Electricity Outages',sev:'high',color:'#ff8c00'},
+  {ward:'TRILOKPURI',text:'"Hospital mein doctor nahi milta, ghante bhar wait karna padta hai emergency mein"',lang:'Hindi',issue:'Healthcare',sev:'urgent',color:'#ff4d4d'},
+  {ward:'PATPARGANJ',text:'"Bus number 419 last 2 days not coming, people late for work daily"',lang:'English',issue:'Public Transport',sev:'moderate',color:'#ffd600'},
+  {ward:'KARAWAL NAGAR',text:'"Sarkari contractor ne kaam aadha chhod diya, 3 mahine baad bhi nahi aaya"',lang:'Hindi',issue:'Corruption Reports',sev:'high',color:'#ff8c00'},
+  {ward:'GOKALPUR',text:'"Water pressure bilkul nahi hai, oopar floor walon ko paani hi nahi milta"',lang:'Hinglish',issue:'Water Supply',sev:'urgent',color:'#ff4d4d'},
+  {ward:'SEEMAPURI',text:'"Park mein garbage dump ban gaya hai, bacche khelne nahi ja sakte"',lang:'Hindi',issue:'Garbage Collection',sev:'high',color:'#ff8c00'},
+  {ward:'KONDLI',text:'"Road repairing ke naam par sirf painting ki, kaam kuch nahi hua"',lang:'Hinglish',issue:'Road Infrastructure',sev:'moderate',color:'#ffd600'},
+  {ward:'LAXMI NAGAR',text:'"Public toilet lock rehta hai din mein, koi supervision nahi hai"',lang:'Hindi',issue:'Sanitation',sev:'high',color:'#ff8c00'},
+  {ward:'GANDHI NAGAR',text:'"Transformer blast hua kal raat, abhi tak repair team nahi aayi"',lang:'Hindi',issue:'Electricity Outages',sev:'urgent',color:'#ff4d4d'},
+  {ward:'SHAHDARA',text:'"Sadak ka patchwork 1 hafte mein uth gaya, form bhari lekin koi nahi suna"',lang:'Hinglish',issue:'Road Infrastructure',sev:'high',color:'#ff8c00'},
+  {ward:'SEELAMPUR',text:'"Open sewer near school is a health hazard, children falling sick regularly"',lang:'English',issue:'Drainage Issues',sev:'urgent',color:'#ff4d4d'},
+  {ward:'BABARPUR',text:'"MCD truck aata hai par kachra uthata nahi, sirf dekh ke chala jaata hai"',lang:'Hindi',issue:'Garbage Collection',sev:'moderate',color:'#ffd600'},
+  {ward:'GHONDA',text:'"PWD wale road mein bada khadda bana gaye, koi fill nahi kar raha"',lang:'Hinglish',issue:'Road Infrastructure',sev:'high',color:'#ff8c00'},
+  {ward:'ROHINI EAST',text:'"3 days no water, DJB helpline not responding, this is unacceptable"',lang:'English',issue:'Water Supply',sev:'urgent',color:'#ff4d4d'},
+];
+
+let feedRunning = true;
+let feedInterval = null;
+let reportCount = 4;
+let poolIndex = 0;
+
+function formatTime(){ return 'Just now'; }
+
+function sevTagClass(sev){
+  if(sev==='urgent') return 'tag-sev-urgent';
+  if(sev==='high') return 'tag-sev-high';
+  return 'tag-sev-moderate';
+}
+
+function addReport(item, isNew=true){
+  const list = document.getElementById('reportList');
+  const div = document.createElement('div');
+  div.className = 'report-item' + (isNew ? ' flash' : '');
+  div.style.borderColor = item.color;
+  div.innerHTML = `
+    <div class="report-top">
+      <span class="report-ward">${item.ward} ${isNew ? '<span class="badge-new">NEW</span>' : ''}</span>
+      <span class="report-time">${formatTime()}</span>
+    </div>
+    <div class="report-text">${item.text}</div>
+    <div class="report-tags">
+      <span class="tag tag-lang">${item.lang}</span>
+      <span class="tag tag-issue">${item.issue}</span>
+      <span class="tag ${sevTagClass(item.sev)}">${item.sev.toUpperCase()}</span>
+    </div>`;
+  list.insertBefore(div, list.firstChild);
+  list.scrollTop = 0;
+
+  // Cap at 20 items
+  while(list.children.length > 20) list.removeChild(list.lastChild);
+
+  reportCount++;
+  document.getElementById('feedCount').textContent = `${reportCount} reports`;
+
+  // Update ticker
+  updateTicker(item);
+}
+
+function updateTicker(item){
+  const inner = document.getElementById('tickerInner');
+  const entry = `${item.ward} · ${item.issue} · ${item.sev.toUpperCase()}`;
+  // duplicate content for seamless loop
+  const all = Array.from(inner.querySelectorAll('span')).map(s=>s.textContent);
+  all.unshift(entry);
+  if(all.length > 12) all.pop();
+  const doubled = [...all, ...all];
+  inner.innerHTML = doubled.map(t=>`<span>${t}</span>`).join('');
+}
+
+function startFeed(){
+  feedInterval = setInterval(()=>{
+    const item = FEED_POOL[poolIndex % FEED_POOL.length];
+    poolIndex++;
+    addReport(item, true);
+  }, getRandomInterval());
+}
+
+function getRandomInterval(){
+  return 3500 + Math.random() * 3000; // 3.5–6.5s
+}
+
+function restartFeed(){
+  clearInterval(feedInterval);
+  if(feedRunning) startFeed();
+}
+
+function toggleFeed(){
+  feedRunning = !feedRunning;
+  const btn = document.getElementById('feedToggle');
+  if(feedRunning){
+    btn.textContent = 'Live Feed';
+    btn.classList.remove('paused');
+    startFeed();
+  } else {
+    btn.textContent = 'Paused';
+    btn.classList.add('paused');
+    clearInterval(feedInterval);
+  }
+}
+
+// Init ticker with seed data
+const seedTicker = [
+  'SHAHDARA · Road Infrastructure · URGENT',
+  'ROHINI · Water Supply · URGENT',
+  'CHANDNI CHOWK · Garbage Collection · HIGH',
+  'ROHINI EAST · Electricity Outages · HIGH',
+  'MUSTAFABAD · Drainage Issues · URGENT',
+];
+const doubled = [...seedTicker, ...seedTicker];
+document.getElementById('tickerInner').innerHTML = doubled.map(t=>`<span>${t}</span>`).join('');
+
+// Stagger initial feed start
+setTimeout(() => startFeed(), 1800);
+</script>
+</body>
+</html>
