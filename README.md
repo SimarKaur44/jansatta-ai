@@ -1,7 +1,7 @@
 # Jansatta AI 🗺️
 ### 20 million voices. One map. Zero excuses.
 
-**Team EchoMappers | India Innovates 2026 | IILM University**
+**Team EchoMappers | India Innovates 2026 **
 
 Jansatta AI turns the unheard voices of citizens into a real-time map of urgent governance need.
 
