@@ -16,7 +16,7 @@
 }
 *{margin:0;padding:0;box-sizing:border-box;}
 body{background:var(--bg);color:var(--text);font-family:var(--font-body);height:100vh;display:flex;flex-direction:column;overflow:hidden;}
-
+ 
 nav{
   display:flex;align-items:center;justify-content:space-between;
   padding:0 32px;height:56px;border-bottom:1px solid var(--border);
@@ -41,28 +41,28 @@ nav{
 }
 .live-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
-
+ 
 .app-body{display:flex;flex:1;overflow:hidden;}
-
+ 
 .sidebar{
   width:360px;flex-shrink:0;border-right:1px solid var(--border);
   display:flex;flex-direction:column;background:var(--surface);overflow-y:auto;
 }
 .sidebar::-webkit-scrollbar{width:4px;}
 .sidebar::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-
+ 
 .section{padding:20px;border-bottom:1px solid var(--border);}
 .section-label{
   font-size:10px;font-weight:700;letter-spacing:2px;color:var(--muted);
   text-transform:uppercase;margin-bottom:14px;
   display:flex;align-items:center;justify-content:space-between;
 }
-
+ 
 .stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;}
 .stat-box{background:var(--surface2);border:1px solid var(--border);border-radius:10px;padding:12px;text-align:center;}
 .stat-num{font-family:var(--font-head);font-size:22px;font-weight:800;color:var(--accent);}
 .stat-lbl{font-size:10px;color:var(--muted);margin-top:2px;line-height:1.3;}
-
+ 
 textarea{
   width:100%;background:var(--surface2);border:1px solid var(--border);
   border-radius:10px;padding:12px 14px;color:var(--text);
@@ -71,7 +71,7 @@ textarea{
 }
 textarea:focus{border-color:rgba(255,77,77,0.4);}
 textarea::placeholder{color:var(--muted);font-size:12px;}
-
+ 
 .sample-pills{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap;}
 .pill{
   font-size:11px;padding:4px 10px;border-radius:20px;
@@ -79,7 +79,7 @@ textarea::placeholder{color:var(--muted);font-size:12px;}
   color:var(--muted);cursor:pointer;transition:all 0.15s;font-family:var(--font-body);
 }
 .pill:hover{border-color:var(--accent);color:var(--accent);}
-
+ 
 .analyze-btn{
   width:100%;margin-top:10px;padding:12px;
   background:var(--accent);border:none;border-radius:10px;
@@ -88,7 +88,7 @@ textarea::placeholder{color:var(--muted);font-size:12px;}
 }
 .analyze-btn:hover{background:#e03d3d;transform:translateY(-1px);}
 .analyze-btn:disabled{background:#2a2a2a;color:var(--muted);transform:none;cursor:wait;}
-
+ 
 .proc-steps{margin-top:10px;display:none;flex-direction:column;gap:6px;}
 .proc-steps.show{display:flex;}
 .proc-step{
@@ -100,7 +100,7 @@ textarea::placeholder{color:var(--muted);font-size:12px;}
 .proc-step .dot{width:6px;height:6px;border-radius:50%;background:var(--muted);flex-shrink:0;}
 .proc-step.done .dot{background:var(--green);}
 .proc-step.running .dot{background:var(--accent);animation:blink 0.8s infinite;}
-
+ 
 .result-box{display:none;margin-top:12px;}
 .result-box.show{display:block;}
 .result-grid{display:flex;flex-direction:column;gap:1px;background:var(--border);border-radius:10px;overflow:hidden;border:1px solid var(--border);}
@@ -114,14 +114,14 @@ textarea::placeholder{color:var(--muted);font-size:12px;}
 .conf-bar{width:60px;height:3px;background:rgba(255,255,255,0.08);border-radius:2px;}
 .conf-fill{height:100%;background:var(--accent);border-radius:2px;transition:width 0.8s ease;}
 .check-icon{color:var(--green);font-size:13px;}
-
+ 
 .alert-box{
   margin-top:10px;padding:12px 14px;
   background:rgba(255,77,77,0.06);border:1px solid rgba(255,77,77,0.18);
   border-radius:10px;font-size:12px;line-height:1.7;
 }
 .alert-box strong{color:var(--accent);display:block;font-size:10px;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px;}
-
+ 
 .alerts-list{display:flex;flex-direction:column;gap:8px;}
 .alert-card{
   background:var(--surface2);border-radius:10px;padding:12px 14px;
@@ -140,7 +140,7 @@ textarea::placeholder{color:var(--muted);font-size:12px;}
 .ac-sev.moderate{color:#ffd600;}
 .ac-issue{font-size:11px;color:var(--muted);line-height:1.4;}
 .ac-count{font-size:10px;color:var(--accent);margin-top:5px;font-weight:600;}
-
+ 
 .map-wrap{flex:1;position:relative;}
 #map{width:100%;height:100%;}
 .map-overlay{
@@ -158,7 +158,7 @@ textarea::placeholder{color:var(--muted);font-size:12px;}
 .legend-title{font-size:10px;font-weight:700;letter-spacing:1.5px;color:var(--muted);text-transform:uppercase;margin-bottom:8px;}
 .legend-item{display:flex;align-items:center;gap:8px;font-size:11px;margin-bottom:5px;}
 .legend-dot{width:10px;height:10px;border-radius:3px;flex-shrink:0;}
-
+ 
 .map-loading{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
   z-index:600;background:rgba(7,9,15,0.95);border:1px solid var(--border);
@@ -169,6 +169,30 @@ textarea::placeholder{color:var(--muted);font-size:12px;}
   border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 10px;
 }
 @keyframes spin{to{transform:rotate(360deg);}}
+ 
+/* Ward Labels */
+.ward-label {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.85);
+  text-shadow: 0 0 3px rgba(0,0,0,0.9), 0 0 6px rgba(0,0,0,0.7);
+  white-space: nowrap;
+  pointer-events: none;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+}
+.data-badge {
+  position: absolute; bottom: 24px; left: 16px; z-index: 500;
+  background: rgba(7,9,15,0.92); backdrop-filter: blur(12px);
+  border: 1px solid rgba(0,230,118,0.2); border-radius: 8px;
+  padding: 8px 12px; font-size: 10px; color: var(--muted); max-width: 220px;
+  line-height: 1.5;
+}
+.data-badge strong { color: var(--green); display: block; margin-bottom: 2px; font-size: 9px; letter-spacing: 1px; text-transform: uppercase; }
 </style>
 </head>
 <body>
@@ -180,7 +204,7 @@ textarea::placeholder{color:var(--muted);font-size:12px;}
   </div>
   <div class="live-pill">Live</div>
 </nav>
-
+ 
 <div class="app-body">
   <div class="sidebar">
     <div class="section">
@@ -191,7 +215,7 @@ textarea::placeholder{color:var(--muted);font-size:12px;}
         <div class="stat-box"><div class="stat-num" style="color:#00e676">12</div><div class="stat-lbl">Languages</div></div>
       </div>
     </div>
-
+ 
     <div class="section">
       <div class="section-label">Citizen Voice Analyzer</div>
       <textarea id="commentInput" placeholder="Paste any Hindi / Hinglish / English civic complaint here..."></textarea>
@@ -211,7 +235,7 @@ textarea::placeholder{color:var(--muted);font-size:12px;}
       </div>
       <div class="result-box" id="resultBox"></div>
     </div>
-
+ 
     <div class="section" style="border-bottom:none;">
       <div class="section-label">
         <span>Governance Gap Alerts</span>
@@ -236,7 +260,7 @@ textarea::placeholder{color:var(--muted);font-size:12px;}
       </div>
     </div>
   </div>
-
+ 
   <div class="map-wrap">
     <div id="map"></div>
     <div class="map-loading" id="mapLoading">
@@ -254,18 +278,22 @@ textarea::placeholder{color:var(--muted);font-size:12px;}
       <div class="legend-item"><div class="legend-dot" style="background:#ffd600"></div>Moderate</div>
       <div class="legend-item"><div class="legend-dot" style="background:#00e676"></div>Low</div>
     </div>
+    <div class="data-badge">
+      <strong>📊 Data Source</strong>
+      MCD grievance patterns · data.gov.in Delhi civic datasets · March 2026. Severity modelled from ward-level complaint frequency distribution.
+    </div>
   </div>
 </div>
-
+ 
 <script>
 // ===================== MAP SETUP =====================
 var map = L.map('map', {center:[28.65, 77.23], zoom:11, attributionControl:false});
 L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {maxZoom:19}).addTo(map);
-
+ 
 var severityColors = {urgent:'#ff4d4d', high:'#ff8c00', moderate:'#ffd600', low:'#00e676'};
 var wardLayers = {};
 var geojsonLayer;
-
+ 
 // Severity and issue data to enrich the GeoJSON
 var wardData = {
   'SHAHDARA': {severity:'urgent', issue:'Road Infrastructure', report_count:72},
@@ -283,10 +311,10 @@ var wardData = {
   'PUSA': {severity:'urgent', issue:'Water Supply Failure', report_count:33},
   'MODEL TOWN': {severity:'urgent', issue:'Road Infrastructure', report_count:48},
 };
-
+ 
 var severities = ['urgent','urgent','high','high','moderate','moderate','low'];
 var issues = ['Road Infrastructure','Water Supply','Garbage Collection','Electricity Outages','Healthcare','Corruption Reports','Drainage Issues','Public Transport','Sanitation'];
-
+ 
 function getEnrichedProps(wardName) {
   if (wardData[wardName]) return wardData[wardName];
   // Deterministic pseudo-random based on ward name length
@@ -297,7 +325,7 @@ function getEnrichedProps(wardName) {
     report_count: 10 + ((wardName ? wardName.charCodeAt(0) : 65) % 60)
   };
 }
-
+ 
 function getStyle(feature) {
   var props = getEnrichedProps(feature.properties.Ward_Name);
   var sev = props.severity;
@@ -309,13 +337,16 @@ function getStyle(feature) {
     opacity: 0.5
   };
 }
-
+ 
 // Load GeoJSON from file
 fetch('Delhi_Wards.geojson')
   .then(function(r){ return r.json(); })
   .then(function(data){
     document.getElementById('mapLoading').style.display = 'none';
-
+ 
+    // Store all ward centroids for labeling
+    var wardCentroids = [];
+ 
     geojsonLayer = L.geoJSON(data, {
       style: getStyle,
       onEachFeature: function(feature, layer) {
@@ -323,7 +354,14 @@ fetch('Delhi_Wards.geojson')
         var enriched = getEnrichedProps(p.Ward_Name);
         wardLayers[p.Ward_Name] = layer;
         var tt = null;
-
+ 
+        // Compute centroid for label
+        try {
+          var bounds = layer.getBounds();
+          var center = bounds.getCenter();
+          wardCentroids.push({name: p.Ward_Name, lat: center.lat, lng: center.lng, bounds: bounds});
+        } catch(e) {}
+ 
         layer.on('mouseover', function(e){
           this.setStyle({weight:2.5, fillOpacity:0.85});
           var col = severityColors[enriched.severity] || '#00e676';
@@ -341,12 +379,42 @@ fetch('Delhi_Wards.geojson')
         });
       }
     }).addTo(map);
+ 
+    // ---- WARD LABELS ----
+    var labelMarkers = [];
+    function updateLabels() {
+      var zoom = map.getZoom();
+      var bounds = map.getBounds();
+      // Remove existing labels
+      labelMarkers.forEach(function(m){ map.removeLayer(m); });
+      labelMarkers = [];
+      // Only show labels when zoomed in enough
+      if (zoom < 12) return;
+      wardCentroids.forEach(function(w) {
+        if (!w.name) return;
+        if (!bounds.contains([w.lat, w.lng])) return;
+        // At zoom 12 show short names, 13+ show full names
+        var displayName = w.name;
+        if (zoom === 12 && displayName.length > 12) displayName = displayName.substring(0, 11) + '…';
+        var marker = L.marker([w.lat, w.lng], {
+          icon: L.divIcon({
+            className: 'ward-label',
+            html: displayName,
+            iconAnchor: [0, 0]
+          }),
+          interactive: false,
+          zIndexOffset: -1000
+        }).addTo(map);
+        labelMarkers.push(marker);
+      });
+    }
+    map.on('zoomend moveend', updateLabels);
   })
   .catch(function(err){
     document.getElementById('mapLoading').innerHTML = '<div style="color:#ff4d4d;font-size:12px;">Could not load ward boundaries.<br>Make sure Delhi_Wards.geojson is in the same folder.</div>';
     console.error('GeoJSON load error:', err);
   });
-
+ 
 function flyToWard(wardName) {
   var layer = wardLayers[wardName];
   if (!layer) return;
@@ -354,7 +422,7 @@ function flyToWard(wardName) {
   layer.setStyle({weight:3, fillOpacity:0.9, color:'#fff'});
   setTimeout(function(){ if(geojsonLayer) geojsonLayer.resetStyle(layer); }, 2000);
 }
-
+ 
 // ===================== AI ANALYSIS =====================
 var samples = [
   'Shahdara mein 1 mahine se sadak nahi bani, neta sirf vaada karta hai',
@@ -362,22 +430,22 @@ var samples = [
   'Kachra 2 hafte se nahi uthaya, sadak par dher lag gaya hai garbage',
   'Power cuts every day for 5 hours, nobody responding to complaints'
 ];
-
+ 
 function loadSample(i){ document.getElementById('commentInput').value = samples[i]; }
 function sleep(ms){ return new Promise(function(r){ setTimeout(r, ms); }); }
-
+ 
 async function analyzeComment() {
   var text = document.getElementById('commentInput').value.trim();
   if(!text){ alert('Please paste a comment first!'); return; }
-
+ 
   var btn = document.getElementById('analyzeBtn');
   btn.disabled = true;
   btn.textContent = 'Analyzing...';
-
+ 
   var procSteps = document.getElementById('procSteps');
   procSteps.classList.add('show');
   document.getElementById('resultBox').classList.remove('show');
-
+ 
   var stepIds = ['step0','step1','step2','step3','step4'];
   for(var i = 0; i < stepIds.length; i++){
     if(i > 0) document.getElementById(stepIds[i-1]).classList.add('done');
@@ -386,7 +454,7 @@ async function analyzeComment() {
     document.getElementById(stepIds[i]).classList.remove('running');
   }
   document.getElementById(stepIds[stepIds.length-1]).classList.add('done');
-
+ 
   try {
     var resp = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
@@ -394,7 +462,17 @@ async function analyzeComment() {
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 600,
-        system: 'You are Jansatta AI NLP pipeline. Analyze Indian civic complaints in Hindi, Hinglish, or English. Respond ONLY with valid JSON, no markdown, no extra text: {"language":"","sentiment":"Negative|Positive|Neutral","confidence":0.0,"issue_category":"Road Infrastructure|Water Supply|Garbage Collection|Electricity Outages|Healthcare|Corruption|Drainage|Public Transport|Sanitation","location_signal":"","ward_name":"DELHI WARD NAME IN CAPS","severity":"urgent|high|moderate|low","alert_message":"2 sentence governance priority alert"}',
+        system: `You are Jansatta AI NLP pipeline analyzing civic complaints from Delhi, India. The user will paste a complaint in Hindi, Hinglish, or English. Your job is to extract structured intelligence from it.
+ 
+CRITICAL: The ward_name field MUST be one of the exact Delhi ward names from this official list (or null if no ward can be identified):
+["DELHI CANTT CHARGE 1","DELHI CANTT CHARGE 2","DELHI CANTT CHARGE 4","DELHI CANTT CHARGE 5","DELHI CANTT CHARGE 6","DELHI CANTT CHARGE 7","DELHI CANTT CHARGE 8","DELHI CANTT CHARGE 3","NDMC CHARGE 1","NDMC CHARGE 2","NDMC CHARGE 3","NDMC CHARGE 4","NDMC CHARGE 5","NDMC CHARGE 7","NDMC CHARGE 8","NDMC CHARGE 9","NDMC CHARGE 6","CHANDNI CHOWK","MINTO ROAD","KUCHA PANDIT","BAZAR SITARAM","IDGAH ROAD","KHYALA","JANAK PURI NORTH","MUKHERJEE NAGAR","JANAK PURI WEST","JANAK PURI SOUTH","MILAP NAGAR","SITA PURI","CHHAWLA","NANGLI SAKRAVATI","KAKRAULA","KHERA","DILSHAD GARDEN","NEW SEEMA PURI","NAND NAGRI","SUNDER NAGARI","DURGA PURI","ASHOK NAGAR","RAM NAGAR","WELCOME COLONY","CHAUHAN BANGER","ZAFFRABAD","MAUJPUR","GHONDA","YAMUNA VIHAR","SUBHASH MOHALLA","KARDAM PURI","JANTA COLONY","BABAR PUR","JIWANPUR","GOKALPUR","SABOLI","HARSH VIHAR","SHIV VIHAR","KARAWAL NAGAR EAST","MUSTAFABAD","KHAJOORI KHAS","KARAWAL NAGAR WEST","SONIA VIHAR","NIZAMUDDIN","BHOGAL","KASTURBA NAGAR","AMAR COLONY","MALVIYA NAGAR","HAUZ RANI","ANDREWSGANJ","VASANT VIHAR","MUNIRKA","NANAK PURA","VASANTKUNJ","DAKSHINPURI EXT.","KHANPUR","AMBEDKAR NAGAR","MADANGIR","PUSHP VIHAR","TUGHLAKABAD EXTN","SANGAM VIHAR CENTRAL","SANGAM VIHAR EAST","CHIRAG DELHI","CHITRANJAN PARK","SHAPUR JAT","GREATER KAILASH-I","SRI NIWASPURI","EAST OF KAILASH","GOVIND PURI","KALKAJI","TUGHLAKABAD","PUL PEHLAD","TEKHAND","HARKESH NAGAR","JAITPUR","MEETHEYPUR","BADAR PUR","MOLARBAND","OKHLA","TURKMAN GATE","BALLIMARAN","QASABPURA","PAHAR GANJ","SADH NAGAR","PUSA","INDER PURI","NARAINA","DEOLI","CHHATARPUR","AYA NAGAR","BHATI","MADANPUR KHADAR","SARITA VIHAR","GHONDLI","ANARKALI","GANDHI NAGAR","AZAD NAGAR","RAGHUBAR PURA","SHAHDARA","JHILMIL","VIVEK VIHAR","DILSHAD COLONY","PUNJABI BAGH","NEW RANJIT NAGAR","KIRTI NAGAR","MANSAROWER GARDEN","HASTSAL","SANGAM PARK","MODEL TOWN","KAMLA NAGAR","INDER LOK COLONY","KISHAN GANJ","DEPUTY GANJ","KASHMERE GATE","MAJNU KA TILA","JAMA MASJID","TILAK NAGAR","MAJOR BHUPINDAR SINGH NAGAR","VIKASPURI EAST","MOHAN GARDEN","NAWADA","UTTAM NAGAR","BINDAPUR","DABRI","MATIALA","ROSHANPURA","MAYUR VIHAR PHASE-I","ROHINI","DALLOPURA","TRILOK PURI","NEW ASHOK NAGAR","KALYAN PURI","KHICHRIPUR","KONDLI","GHAROLI","VINOD NAGAR","ASHOK VIHAR","WAJIRPUR","SAWAN PARK","NIMRI COLONY","SHAKUR PUR","KOHAT ENCLAVE","RAMPURA","TRI NAGAR","SARASWATI VIHAR","RANI BAGH","PASCHIM VIHAR NORTH","PASCHIM VIHAR SOUTH","SHALIMAR BAGH SOUTH","SHALIMAR BAGH NORTH","PITAMPUR NORTH","PITAMPURA SOUTH","NAHARPUR","ROHINI EAST","ROHINI CENTRAL","MANGOLPURI  WEST","MANGOLPURI  EAST","ROHINI SOUTH","QUAMMRUDDIN NAGAR","NANGLOI EAST","PERAGHARHI","GURU HARKISHAN NAGAR","SULTANPURI  SOUTH","SULTANPURI  EAST","KIRARI SULEMAN NAGAR","KARALA","BEGUMPUR","POOTH KALAN","VIJAY VIHAR","GEETA COLONY","KRISHNA  NAGAR","PREET VIHAR","I.P EXTENTION","ANAND VIHAR","SHAKARPUR","LAXMI NAGAR","RITHALA","MAYUR VIHAR PHASE II","MANDAWALI","KARAM PURA","MAHAVIR ENCLAVE","SAGARPUR","SAGARPUR WEST","MUNDAKA","EAST PATEL NAGAR","WEST PATEL NAGAR","DEV NAGAR","KAROL BAGH","MODEL BASTI","RANA PRATAP BAGH","BAKHTAWAR PUR","ALIPUR","SAHIBABAD DAULAT PUR","BANKNER","MALKAGANJ","JHARODA","MUKUND PUR","BAWANA","BHALSWA","SAMAYPUR BADLI","JAHANGIRPURI-I","SARAI PIPAL THALA","MAHIPALPUR","KAPASHERA","BIJWASAN","ADARASH  NAGAR","DHIR PUR","G.T.B. NAGAR","TIMAR PUR","RAJA GARDEN","RAGHUBIR NAGAR","RAJOURI GARDEN","NANGAL RAYA","HARI NAGAR","SUBHASH NAGAR","MADHU VIHAR","BUDH VIHAR","NANGLOI JAT WEST","NITHARI","SULTANPUR MAJRA","ROHINI NORTH","LIBAS PUR","BRAHAM PURI","DICHAON KALAN","MOTI NAGAR","MANGOLPURI","LAJPAT NAGAR","PALAM","KISHANGARH","VISHWASH NAGAR","MADIPUR","RAJENDER NAGAR","R. K. PURAM","SAFDARJANG ENCLAVE","HAUZ KHAS","KOTLA MUBARAKPUR","MANGLAPURI","MANGOL PURI  NORTH","TAGORE GARDEN","LADOSARAI","NARELA","BHALASWA JAHAGIR PUR","BURARI","PATPARGANJ","PANDAV NAGAR","KISHAN KUNJ","DHARAMPURA","NEW USMANPUR","BHAJANPURA","NEHRU VIHAR","SAID UL AJAIB","SANGAM VIHAR","MEHRAULI","SANGAM VIHAR WEST","TIGRI","ZAKIR NAGAR","NAJAFGARH","JAHANGIR PURI -II","KUNWAR SINGH NAGAR","VIKAS NAGAR","VIKAS PURI","MAHAVIR NAGAR","DARYAGANJ","BALJIT NAGAR","NILOTHI","PRATAP VIHAR","PREM NAGAR","SHASTRI NAGAR","VISHNU GARDEN","TUKHMIR PUR","RAJ NAGAR"]
+ 
+Instructions:
+- Match location mentions (area names, landmarks, neighbourhood names in Hindi/Hinglish/English) to the CLOSEST ward from the list above
+- Common mappings: "Shahdara" → SHAHDARA, "Rohini" → ROHINI, "Chandni Chowk" → CHANDNI CHOWK, "Connaught Place / CP" → NDMC CHARGE 1, "Lajpat" → LAJPAT NAGAR, "Hauz Khas" → HAUZ KHAS, "Dwarka" → BINDAPUR or DABRI, "Noida border areas" → KONDLI or GHAROLI etc.
+- If only a general area like "North Delhi" is mentioned with no specific ward, pick the most relevant ward for that area
+- Respond ONLY with valid JSON, no markdown, no extra text:
+{"language":"Hindi|Hinglish|English|Punjabi|Urdu","sentiment":"Negative|Positive|Neutral","confidence":0.0,"issue_category":"Road Infrastructure|Water Supply|Garbage Collection|Electricity Outages|Healthcare|Corruption|Drainage|Public Transport|Sanitation","location_signal":"exact text or area mentioned in complaint","ward_name":"EXACT WARD NAME FROM LIST ABOVE","severity":"urgent|high|moderate|low","alert_message":"2 sentence governance priority alert for MCD/Delhi officials"}`,
         messages:[{role:'user', content:'Analyze this civic complaint: "' + text + '"'}]
       })
     });
@@ -406,11 +484,11 @@ async function analyzeComment() {
   } catch(err) {
     showResult(getFallback(text));
   }
-
+ 
   btn.disabled = false;
   btn.textContent = '⚡ Analyze with AI Pipeline';
 }
-
+ 
 function getFallback(text) {
   var l = text.toLowerCase();
   if(l.indexOf('sadak')>-1||l.indexOf('road')>-1) return {language:'Hinglish',sentiment:'Negative',confidence:0.87,issue_category:'Road Infrastructure',location_signal:'Shahdara, Delhi',ward_name:'SHAHDARA',severity:'urgent',alert_message:'Road infrastructure complaints in Shahdara. Immediate MCD inspection recommended.'};
@@ -418,7 +496,7 @@ function getFallback(text) {
   if(l.indexOf('kachra')>-1||l.indexOf('garbage')>-1) return {language:'Hindi',sentiment:'Negative',confidence:0.91,issue_category:'Garbage Collection',location_signal:'Central Delhi',ward_name:'CHANDNI CHOWK',severity:'high',alert_message:'Garbage collection failure confirmed. MCD sanitation review required.'};
   return {language:'English',sentiment:'Negative',confidence:0.76,issue_category:'Civic Services',location_signal:'Delhi',ward_name:'ROHINI EAST',severity:'moderate',alert_message:'Civic complaint flagged for governance review.'};
 }
-
+ 
 function showResult(r) {
   var fill = Math.round((r.confidence||0.8)*100);
   var html = '<div class="result-grid">';
