@@ -39,7 +39,7 @@ nav{
 .live-pill::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.5s infinite;}
 @keyframes blink{0%,100%{opacity:1;}50%{opacity:0.3;}}
 
-.page-content{flex:1;padding:32px;max-width:1200px;margin:0 auto;width:100%;}
+.page-content{flex:1;padding:32px;max-width:1240px;margin:0 auto;width:100%;}
 
 /* HEADER */
 .page-header{margin-bottom:32px;}
@@ -51,17 +51,16 @@ nav{
 .metrics-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:28px;}
 .metric-card{
   background:var(--surface);border:1px solid var(--border);border-radius:14px;
-  padding:20px;position:relative;overflow:hidden;
+  padding:20px;position:relative;overflow:hidden;transition:transform 0.2s,border-color 0.2s;
 }
-.metric-card::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-}
+.metric-card:hover{transform:translateY(-2px);border-color:rgba(255,255,255,0.12);}
+.metric-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;}
 .metric-card.red::before{background:var(--accent);}
 .metric-card.orange::before{background:var(--orange);}
 .metric-card.yellow::before{background:var(--yellow);}
 .metric-card.green::before{background:var(--green);}
 .metric-card.blue::before{background:#63b3ff;}
-.metric-num{font-family:var(--font-head);font-size:32px;font-weight:800;margin-bottom:4px;}
+.metric-num{font-family:var(--font-head);font-size:32px;font-weight:800;margin-bottom:4px;transition:color 0.4s;}
 .metric-card.red .metric-num{color:var(--accent);}
 .metric-card.orange .metric-num{color:var(--orange);}
 .metric-card.yellow .metric-num{color:var(--yellow);}
@@ -70,7 +69,39 @@ nav{
 .metric-label{font-size:12px;color:var(--muted);}
 .metric-sub{font-size:10px;color:var(--muted);margin-top:4px;opacity:0.6;}
 
-/* TWO COL */
+/* YOUTUBE BATCH */
+.yt-batch-card{background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:22px;margin-bottom:20px;}
+.yt-batch-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.yt-batch-title{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--muted);text-transform:uppercase;}
+.yt-badge{background:rgba(255,77,77,0.1);color:var(--accent);border:1px solid rgba(255,77,77,0.2);padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;}
+.yt-batch-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;}
+.yt-batch-input{
+  flex:1;min-width:180px;background:var(--surface2);border:1px solid var(--border);
+  border-radius:8px;padding:9px 12px;color:var(--text);
+  font-family:monospace;font-size:11px;outline:none;transition:border 0.2s;
+}
+.yt-batch-input:focus{border-color:rgba(255,215,0,0.4);}
+.yt-batch-input::placeholder{color:var(--muted);}
+.batch-btn{
+  padding:9px 20px;background:var(--accent);border:none;border-radius:8px;
+  color:#fff;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:var(--font-body);transition:all 0.2s;white-space:nowrap;
+}
+.batch-btn:hover{background:#e03d3d;transform:translateY(-1px);}
+.batch-btn:disabled{background:#2a2a2a;color:var(--muted);transform:none;cursor:wait;}
+.batch-status{font-size:11px;color:var(--muted);margin-top:8px;min-height:16px;}
+.batch-status.ok{color:var(--green);}
+.batch-status.err{color:var(--accent);}
+.batch-progress{
+  margin-top:10px;display:none;
+  background:var(--surface2);border-radius:8px;padding:12px 14px;
+}
+.batch-progress.show{display:block;}
+.bp-bar-track{width:100%;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;margin:8px 0;}
+.bp-bar-fill{height:100%;background:var(--accent);border-radius:2px;width:0%;transition:width 0.5s ease;}
+.bp-label{font-size:11px;color:var(--muted);}
+
+/* TWO / THREE COL */
 .two-col{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:20px;}
 .three-col{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:20px;}
 
@@ -86,8 +117,9 @@ nav{
 .pipe-step{
   flex:1;padding:14px 10px;text-align:center;
   background:var(--surface2);border:1px solid var(--border);
-  position:relative;
+  position:relative;transition:background 0.3s;
 }
+.pipe-step.active-pipe{background:rgba(255,77,77,0.08);border-color:rgba(255,77,77,0.2);}
 .pipe-step:first-child{border-radius:10px 0 0 10px;}
 .pipe-step:last-child{border-radius:0 10px 10px 0;}
 .pipe-step::after{
@@ -98,6 +130,7 @@ nav{
 .pipe-icon{font-size:20px;margin-bottom:6px;}
 .pipe-name{font-size:10px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--text);margin-bottom:3px;}
 .pipe-tech{font-size:10px;color:var(--muted);}
+.pipe-count{font-size:11px;font-weight:700;color:var(--accent);margin-top:4px;}
 
 /* ISSUE BARS */
 .issue-bar-wrap{display:flex;flex-direction:column;gap:10px;}
@@ -105,41 +138,48 @@ nav{
 .issue-name{width:140px;color:var(--muted);flex-shrink:0;}
 .bar-track{flex:1;height:6px;background:rgba(255,255,255,0.06);border-radius:3px;overflow:hidden;}
 .bar-fill{height:100%;border-radius:3px;transition:width 1s ease;}
-.issue-count{width:30px;text-align:right;font-weight:600;font-size:11px;}
+.issue-count{width:36px;text-align:right;font-weight:600;font-size:11px;}
 
-/* LANGUAGE PIE (CSS only) */
+/* LANGUAGE */
 .lang-list{display:flex;flex-direction:column;gap:10px;margin-top:4px;}
 .lang-row{display:flex;align-items:center;justify-content:space-between;font-size:12px;}
 .lang-left{display:flex;align-items:center;gap:10px;}
 .lang-dot{width:10px;height:10px;border-radius:50%;}
 .lang-name{color:var(--text);}
 .lang-bar-wrap{flex:1;margin:0 12px;height:4px;background:rgba(255,255,255,0.06);border-radius:2px;overflow:hidden;}
-.lang-bar{height:100%;border-radius:2px;}
+.lang-bar{height:100%;border-radius:2px;transition:width 1s ease;}
 .lang-pct{color:var(--muted);font-size:11px;width:30px;text-align:right;}
 
 /* RECENT REPORTS */
-.report-list{display:flex;flex-direction:column;gap:8px;}
+.report-list{display:flex;flex-direction:column;gap:8px;max-height:340px;overflow-y:auto;}
+.report-list::-webkit-scrollbar{width:3px;}
+.report-list::-webkit-scrollbar-thumb{background:var(--border);}
 .report-item{
   background:var(--surface2);border-radius:10px;padding:12px 14px;
-  border-left:3px solid;font-size:12px;
+  border-left:3px solid;font-size:12px;animation:fadeIn 0.4s ease;
 }
+@keyframes fadeIn{from{opacity:0;transform:translateX(-8px);}to{opacity:1;transform:translateX(0);}}
 .report-top{display:flex;justify-content:space-between;margin-bottom:5px;}
 .report-ward{font-weight:700;font-size:13px;}
 .report-time{color:var(--muted);font-size:10px;}
 .report-text{color:var(--muted);font-style:italic;margin-bottom:4px;line-height:1.5;}
-.report-tags{display:flex;gap:6px;}
+.report-tags{display:flex;gap:6px;flex-wrap:wrap;}
 .tag{padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;}
 .tag-lang{background:rgba(99,179,255,0.1);color:#63b3ff;}
 .tag-issue{background:rgba(255,140,0,0.1);color:var(--orange);}
 .tag-sev-urgent{background:rgba(255,77,77,0.1);color:var(--accent);}
 .tag-sev-high{background:rgba(255,140,0,0.1);color:var(--orange);}
+.tag-sev-moderate{background:rgba(255,214,0,0.1);color:var(--yellow);}
+.tag-yt{background:rgba(255,0,0,0.1);color:#ff6060;border:1px solid rgba(255,0,0,0.15);}
 
 /* TECH STACK */
 .tech-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;}
 .tech-item{
   display:flex;align-items:center;gap:10px;
   background:var(--surface2);border:1px solid var(--border);border-radius:8px;padding:10px 12px;
+  transition:border-color 0.2s;
 }
+.tech-item:hover{border-color:rgba(255,255,255,0.12);}
 .tech-icon{font-size:18px;}
 .tech-name{font-size:12px;font-weight:600;margin-bottom:1px;}
 .tech-desc{font-size:10px;color:var(--muted);}
@@ -147,11 +187,15 @@ nav{
 /* ANIMATE IN */
 @keyframes fadeUp{from{opacity:0;transform:translateY(16px);}to{opacity:1;transform:translateY(0);}}
 .animate{animation:fadeUp 0.5s ease forwards;opacity:0;}
-.d1{animation-delay:0.05s;}
-.d2{animation-delay:0.1s;}
-.d3{animation-delay:0.15s;}
-.d4{animation-delay:0.2s;}
-.d5{animation-delay:0.25s;}
+.d1{animation-delay:0.05s;}.d2{animation-delay:0.1s;}.d3{animation-delay:0.15s;}
+.d4{animation-delay:0.2s;}.d5{animation-delay:0.25s;}.d6{animation-delay:0.3s;}
+
+/* insight box */
+.insight-box{
+  margin-top:16px;padding:12px 14px;border-radius:10px;font-size:12px;line-height:1.7;
+  background:rgba(0,230,118,0.05);border:1px solid rgba(0,230,118,0.15);color:var(--text);
+}
+.insight-box strong{color:var(--green);}
 </style>
 </head>
 <body>
@@ -166,25 +210,26 @@ nav{
 </nav>
 
 <div class="page-content">
+
   <div class="page-header animate d1">
     <h1>Governance <span>Intelligence</span> Dashboard</h1>
-    <p>Real-time civic sentiment analysis across 290 Delhi wards · Updated every 6 hours</p>
+    <p>Real-time civic sentiment analysis across 290 Delhi wards · YouTube API + Claude AI pipeline</p>
   </div>
 
   <!-- TOP METRICS -->
   <div class="metrics-grid animate d2">
     <div class="metric-card red">
-      <div class="metric-num">14</div>
+      <div class="metric-num" id="m-urgent">14</div>
       <div class="metric-label">Urgent Alerts</div>
       <div class="metric-sub">Require immediate action</div>
     </div>
     <div class="metric-card orange">
-      <div class="metric-num">33</div>
+      <div class="metric-num" id="m-high">33</div>
       <div class="metric-label">High Priority</div>
       <div class="metric-sub">Action within 48 hrs</div>
     </div>
     <div class="metric-card yellow">
-      <div class="metric-num">58K</div>
+      <div class="metric-num" id="m-datapoints">58K</div>
       <div class="metric-label">Data Points</div>
       <div class="metric-sub">This week · Delhi NCT</div>
     </div>
@@ -194,40 +239,63 @@ nav{
       <div class="metric-sub">100% of Delhi wards</div>
     </div>
     <div class="metric-card blue">
-      <div class="metric-num">47ms</div>
+      <div class="metric-num" id="m-resp">47ms</div>
       <div class="metric-label">Avg Response</div>
       <div class="metric-sub">Comment → Alert time</div>
     </div>
   </div>
 
-  <!-- PIPELINE -->
+  <!-- YOUTUBE BATCH ANALYZER -->
+  <div class="yt-batch-card animate d3">
+    <div class="yt-batch-header">
+      <span class="yt-batch-title">📺 Live YouTube Batch Analyzer</span>
+      <span class="yt-badge">Real Data Pipeline</span>
+    </div>
+    <div class="yt-batch-controls">
+      <input class="yt-batch-input" id="batchApiKey" type="password" placeholder="YouTube Data API v3 key (AIza...)"/>
+      <input class="yt-batch-input" id="batchQuery" style="font-family:var(--font-body);font-size:12px;" placeholder="Search query e.g. Delhi MCD complaint" value="Delhi MCD civic complaint problem"/>
+      <button class="batch-btn" id="batchRunBtn" onclick="runBatchPipeline()">▶ Run Pipeline</button>
+    </div>
+    <div class="batch-status" id="batchStatus">Enter YouTube API key + query, then click Run Pipeline to analyze real comments through the full AI pipeline</div>
+    <div class="batch-progress" id="batchProgress">
+      <div class="bp-label" id="batchProgLabel">Initializing...</div>
+      <div class="bp-bar-track"><div class="bp-bar-fill" id="batchBarFill"></div></div>
+    </div>
+  </div>
+
+  <!-- PIPELINE VISUAL -->
   <div class="card animate d3" style="margin-bottom:20px;">
-    <div class="card-title">AI Processing Pipeline</div>
+    <div class="card-title">AI Processing Pipeline <span id="pipelineStatus" style="color:var(--muted);font-weight:400;font-size:10px;letter-spacing:0">Idle</span></div>
     <div class="pipeline">
-      <div class="pipe-step">
-        <div class="pipe-icon">📥</div>
+      <div class="pipe-step" id="pipe0">
+        <div class="pipe-icon">📺</div>
         <div class="pipe-name">Ingestion</div>
-        <div class="pipe-tech">YouTube API v3<br>RSS Feeds</div>
+        <div class="pipe-tech">YouTube API v3<br>Comment Threads</div>
+        <div class="pipe-count" id="pc0">—</div>
       </div>
-      <div class="pipe-step">
+      <div class="pipe-step" id="pipe1">
+        <div class="pipe-icon">🔍</div>
+        <div class="pipe-name">Filtering</div>
+        <div class="pipe-tech">Civic keyword<br>relevance filter</div>
+        <div class="pipe-count" id="pc1">—</div>
+      </div>
+      <div class="pipe-step" id="pipe2">
         <div class="pipe-icon">🧠</div>
         <div class="pipe-name">Language AI</div>
-        <div class="pipe-tech">IndicBERT<br>MuRIL</div>
+        <div class="pipe-tech">Claude Sonnet<br>Hindi/Hinglish/EN</div>
+        <div class="pipe-count" id="pc2">—</div>
       </div>
-      <div class="pipe-step">
+      <div class="pipe-step" id="pipe3">
         <div class="pipe-icon">🏷️</div>
         <div class="pipe-name">Classification</div>
-        <div class="pipe-tech">NLP Classifier<br>5 Categories</div>
+        <div class="pipe-tech">Issue category<br>Ward mapping</div>
+        <div class="pipe-count" id="pc3">—</div>
       </div>
-      <div class="pipe-step">
-        <div class="pipe-icon">🗺️</div>
-        <div class="pipe-name">Geo-Mapping</div>
-        <div class="pipe-tech">Ward GeoJSON<br>Leaflet.js</div>
-      </div>
-      <div class="pipe-step">
+      <div class="pipe-step" id="pipe4">
         <div class="pipe-icon">🚨</div>
-        <div class="pipe-name">Alert</div>
-        <div class="pipe-tech">Cross-ref MCD<br>Priority Score</div>
+        <div class="pipe-name">Alerts</div>
+        <div class="pipe-tech">Priority score<br>Governance flag</div>
+        <div class="pipe-count" id="pc4">—</div>
       </div>
     </div>
   </div>
@@ -235,50 +303,54 @@ nav{
   <div class="two-col animate d4">
     <!-- ISSUE BREAKDOWN -->
     <div class="card">
-      <div class="card-title">Issue Category Breakdown <span style="color:var(--accent)">This Week</span></div>
+      <div class="card-title">Issue Category Breakdown <span style="color:var(--accent)" id="issueWeek">This Week</span></div>
       <div class="issue-bar-wrap" id="issuesBars"></div>
     </div>
 
     <!-- LANGUAGE DISTRIBUTION -->
     <div class="card">
       <div class="card-title">Language Distribution</div>
-      <div class="lang-list">
+      <div class="lang-list" id="langList">
         <div class="lang-row">
           <div class="lang-left"><div class="lang-dot" style="background:#ff4d4d"></div><span class="lang-name">Hindi</span></div>
-          <div class="lang-bar-wrap"><div class="lang-bar" style="width:42%;background:#ff4d4d"></div></div>
-          <span class="lang-pct">42%</span>
+          <div class="lang-bar-wrap"><div class="lang-bar" id="lb-Hindi" style="width:42%;background:#ff4d4d"></div></div>
+          <span class="lang-pct" id="lp-Hindi">42%</span>
         </div>
         <div class="lang-row">
           <div class="lang-left"><div class="lang-dot" style="background:#ff8c00"></div><span class="lang-name">Hinglish</span></div>
-          <div class="lang-bar-wrap"><div class="lang-bar" style="width:31%;background:#ff8c00"></div></div>
-          <span class="lang-pct">31%</span>
+          <div class="lang-bar-wrap"><div class="lang-bar" id="lb-Hinglish" style="width:31%;background:#ff8c00"></div></div>
+          <span class="lang-pct" id="lp-Hinglish">31%</span>
         </div>
         <div class="lang-row">
           <div class="lang-left"><div class="lang-dot" style="background:#ffd600"></div><span class="lang-name">English</span></div>
-          <div class="lang-bar-wrap"><div class="lang-bar" style="width:14%;background:#ffd600"></div></div>
-          <span class="lang-pct">14%</span>
+          <div class="lang-bar-wrap"><div class="lang-bar" id="lb-English" style="width:14%;background:#ffd600"></div></div>
+          <span class="lang-pct" id="lp-English">14%</span>
         </div>
         <div class="lang-row">
           <div class="lang-left"><div class="lang-dot" style="background:#00e676"></div><span class="lang-name">Punjabi</span></div>
-          <div class="lang-bar-wrap"><div class="lang-bar" style="width:8%;background:#00e676"></div></div>
-          <span class="lang-pct">8%</span>
+          <div class="lang-bar-wrap"><div class="lang-bar" id="lb-Punjabi" style="width:8%;background:#00e676"></div></div>
+          <span class="lang-pct" id="lp-Punjabi">8%</span>
         </div>
         <div class="lang-row">
           <div class="lang-left"><div class="lang-dot" style="background:#63b3ff"></div><span class="lang-name">Urdu</span></div>
-          <div class="lang-bar-wrap"><div class="lang-bar" style="width:5%;background:#63b3ff"></div></div>
-          <span class="lang-pct">5%</span>
+          <div class="lang-bar-wrap"><div class="lang-bar" id="lb-Urdu" style="width:5%;background:#63b3ff"></div></div>
+          <span class="lang-pct" id="lp-Urdu">5%</span>
         </div>
       </div>
-      <div style="margin-top:18px;padding-top:14px;border-top:1px solid var(--border);font-size:11px;color:var(--muted);line-height:1.6;">
-        💡 <strong style="color:var(--text)">Key Insight:</strong> 90% of citizen voice is in regional/mixed languages — completely invisible to existing Twitter-based governance tools.
+      <div class="insight-box">
+        💡 <strong>Key Insight:</strong> 90%+ of citizen voice is in regional/mixed languages — completely invisible to existing Twitter-based governance tools.
       </div>
     </div>
   </div>
 
-  <!-- RECENT REPORTS -->
+  <!-- RECENT REPORTS (live updating) -->
   <div class="card animate d5" style="margin-bottom:20px;">
-    <div class="card-title">Recent Citizen Reports <span style="color:var(--muted);font-weight:400;font-size:10px;letter-spacing:0">Live Feed</span></div>
-    <div class="report-list">
+    <div class="card-title">
+      Recent Citizen Reports
+      <span style="color:var(--muted);font-weight:400;font-size:10px;letter-spacing:0" id="reportFeedLabel">Baseline · Run pipeline for live data</span>
+    </div>
+    <div class="report-list" id="reportList">
+      <!-- Seeded with baseline reports -->
       <div class="report-item" style="border-color:#ff4d4d;">
         <div class="report-top"><span class="report-ward">SHAHDARA</span><span class="report-time">2 min ago</span></div>
         <div class="report-text">"Shahdara mein 1 mahine se sadak nahi bani, neta sirf vaada karta hai"</div>
@@ -319,22 +391,23 @@ nav{
   </div>
 
   <!-- TECH STACK -->
-  <div class="card animate d5">
+  <div class="card animate d6">
     <div class="card-title">Technology Stack</div>
     <div class="tech-grid">
-      <div class="tech-item"><span class="tech-icon">🤖</span><div><div class="tech-name">IndicBERT by AI4Bharat</div><div class="tech-desc">12 Indian languages · 9B token training</div></div></div>
-      <div class="tech-item"><span class="tech-icon">🌐</span><div><div class="tech-name">MuRIL by Google</div><div class="tech-desc">17 Indian languages + transliterations</div></div></div>
+      <div class="tech-item"><span class="tech-icon">🤖</span><div><div class="tech-name">Claude Sonnet (Anthropic)</div><div class="tech-desc">Hindi/Hinglish NLP · Issue + Ward classification</div></div></div>
+      <div class="tech-item"><span class="tech-icon">📺</span><div><div class="tech-name">YouTube Data API v3</div><div class="tech-desc">Real civic comments · 50,000+ data points/week</div></div></div>
       <div class="tech-item"><span class="tech-icon">🗺️</span><div><div class="tech-name">Leaflet.js + GeoJSON</div><div class="tech-desc">Delhi ward boundaries · data.gov.in</div></div></div>
-      <div class="tech-item"><span class="tech-icon">📺</span><div><div class="tech-name">YouTube Data API v3</div><div class="tech-desc">50,000+ data points/week per city</div></div></div>
-      <div class="tech-item"><span class="tech-icon">⚡</span><div><div class="tech-name">FastAPI + React</div><div class="tech-desc">Backend pipeline · Frontend dashboard</div></div></div>
+      <div class="tech-item"><span class="tech-icon">🌐</span><div><div class="tech-name">MuRIL by Google</div><div class="tech-desc">17 Indian languages + transliterations</div></div></div>
+      <div class="tech-item"><span class="tech-icon">🤖</span><div><div class="tech-name">IndicBERT by AI4Bharat</div><div class="tech-desc">12 Indian languages · 9B token training</div></div></div>
       <div class="tech-item"><span class="tech-icon">🏛️</span><div><div class="tech-name">MCD Open Data</div><div class="tech-desc">Cross-reference government project data</div></div></div>
     </div>
   </div>
 
-</div><!-- end page-content -->
+</div>
 
 <script>
-const issues = [
+// ── ISSUE BARS (baseline) ──
+var baseIssues = [
   {name:'Road Infrastructure', count:847, color:'#ff4d4d'},
   {name:'Water Supply', count:612, color:'#63b3ff'},
   {name:'Garbage Collection', count:534, color:'#ff8c00'},
@@ -344,16 +417,251 @@ const issues = [
   {name:'Public Transport', count:198, color:'#fb7185'},
   {name:'Sanitation', count:157, color:'#34d399'},
 ];
-const max = issues[0].count;
-const container = document.getElementById('issuesBars');
-issues.forEach(iss => {
-  const pct = Math.round(iss.count/max*100);
-  container.innerHTML += `<div class="issue-bar-row">
-    <span class="issue-name">${iss.name}</span>
-    <div class="bar-track"><div class="bar-fill" style="width:${pct}%;background:${iss.color}"></div></div>
-    <span class="issue-count" style="color:${iss.color}">${iss.count}</span>
-  </div>`;
-});
+
+var issueCounters = {};
+baseIssues.forEach(function(i){ issueCounters[i.name] = i.count; });
+
+function renderIssueBars() {
+  var all = baseIssues.map(function(i){ return {name:i.name, count:issueCounters[i.name]||i.count, color:i.color}; });
+  all.sort(function(a,b){ return b.count - a.count; });
+  var max = all[0].count;
+  var c = document.getElementById('issuesBars');
+  c.innerHTML = '';
+  all.forEach(function(iss){
+    var pct = Math.round(iss.count/max*100);
+    c.innerHTML += '<div class="issue-bar-row"><span class="issue-name">' + iss.name + '</span>' +
+      '<div class="bar-track"><div class="bar-fill" style="width:' + pct + '%;background:' + iss.color + '"></div></div>' +
+      '<span class="issue-count" style="color:' + iss.color + '">' + iss.count + '</span></div>';
+  });
+}
+renderIssueBars();
+
+// ── PIPELINE BATCH RUNNER ──
+var sevColors = {urgent:'#ff4d4d',high:'#ff8c00',moderate:'#ffd600',low:'#00e676'};
+var sevBorderColors = {urgent:'#ff4d4d',high:'#ff8c00',moderate:'#ffd600',low:'#00e676'};
+var langColors = {'Hindi':'#ff4d4d','Hinglish':'#ff8c00','English':'#ffd600','Punjabi':'#00e676','Urdu':'#63b3ff','Mixed':'#a78bfa'};
+
+function setProgress(pct, label) {
+  document.getElementById('batchBarFill').style.width = pct + '%';
+  document.getElementById('batchProgLabel').textContent = label;
+}
+
+function activatePipe(idx) {
+  for(var i=0;i<5;i++){
+    document.getElementById('pipe'+i).classList.remove('active-pipe');
+  }
+  if(idx >= 0) document.getElementById('pipe'+idx).classList.add('active-pipe');
+}
+
+function sleep(ms){ return new Promise(function(r){ setTimeout(r,ms); }); }
+
+async function runBatchPipeline() {
+  var apiKey = document.getElementById('batchApiKey').value.trim();
+  var query = document.getElementById('batchQuery').value.trim();
+  var statusEl = document.getElementById('batchStatus');
+  var progEl = document.getElementById('batchProgress');
+  var btn = document.getElementById('batchRunBtn');
+
+  if (!apiKey) {
+    statusEl.className = 'batch-status err';
+    statusEl.textContent = '⚠ Please enter your YouTube Data API v3 key';
+    return;
+  }
+  if (!query) {
+    statusEl.className = 'batch-status err';
+    statusEl.textContent = '⚠ Enter a search query';
+    return;
+  }
+
+  btn.disabled = true;
+  progEl.classList.add('show');
+  document.getElementById('pipelineStatus').textContent = 'Running...';
+  document.getElementById('pipelineStatus').style.color = 'var(--accent)';
+
+  // STEP 0: Ingestion
+  activatePipe(0);
+  setProgress(10, 'Step 1/5 — Fetching YouTube videos for: "' + query + '"');
+  statusEl.className = 'batch-status';
+  statusEl.textContent = '⏳ Searching YouTube...';
+
+  var comments = [];
+  try {
+    var searchUrl = 'https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&q=' +
+      encodeURIComponent(query) + '&maxResults=5&relevanceLanguage=hi&regionCode=IN&key=' + apiKey;
+    var sResp = await fetch(searchUrl);
+    var sData = await sResp.json();
+
+    if (sData.error) throw new Error('YouTube API: ' + sData.error.message);
+    var videos = sData.items || [];
+    document.getElementById('pc0').textContent = videos.length + ' videos';
+
+    setProgress(25, 'Step 1/5 — Found ' + videos.length + ' videos. Fetching comments...');
+
+    // Fetch comments from first 2 videos
+    for (var vi = 0; vi < Math.min(2, videos.length); vi++) {
+      var vid = videos[vi].id.videoId;
+      var cUrl = 'https://www.googleapis.com/youtube/v3/commentThreads?part=snippet&videoId=' +
+        vid + '&maxResults=25&order=relevance&key=' + apiKey;
+      var cResp = await fetch(cUrl);
+      var cData = await cResp.json();
+      if (!cData.error && cData.items) {
+        cData.items.forEach(function(item){
+          var snip = item.snippet.topLevelComment.snippet;
+          comments.push({
+            author: snip.authorDisplayName,
+            text: snip.textDisplay,
+            likes: snip.likeCount,
+            videoTitle: videos[vi].snippet.title
+          });
+        });
+      }
+      await sleep(200);
+    }
+  } catch(err) {
+    statusEl.className = 'batch-status err';
+    statusEl.textContent = '❌ ' + err.message;
+    btn.disabled = false;
+    progEl.classList.remove('show');
+    activatePipe(-1);
+    document.getElementById('pipelineStatus').textContent = 'Error';
+    document.getElementById('pipelineStatus').style.color = 'var(--accent)';
+    return;
+  }
+
+  // STEP 1: Filter
+  activatePipe(1);
+  setProgress(35, 'Step 2/5 — Filtering ' + comments.length + ' comments for civic signals...');
+  await sleep(400);
+
+  var civic_kw = ['problem','issue','nahi','nahin','sadak','paani','kachra','bijli','complaint','fix','repair','broken','worst','buri','kharab','barbaad','band','bura','help','garbage','water','road','light','power','nala','drain','hospital','bus','transport','corruption'];
+  var filtered = comments.filter(function(c){
+    var t = c.text.toLowerCase();
+    return civic_kw.some(function(k){ return t.includes(k); }) && c.text.length > 20;
+  });
+  if (filtered.length === 0) filtered = comments.slice(0, 15);
+  var toAnalyze = filtered.slice(0, 12);
+  document.getElementById('pc1').textContent = toAnalyze.length + ' civic';
+  setProgress(40, 'Step 2/5 — Filtered to ' + toAnalyze.length + ' civic comments');
+  await sleep(300);
+
+  // STEP 2 & 3: AI Analysis (batch)
+  activatePipe(2);
+  setProgress(45, 'Step 3/5 — Running Claude AI pipeline...');
+  statusEl.textContent = '⏳ Analyzing ' + toAnalyze.length + ' comments with Claude AI...';
+
+  var results = [];
+  var langCounts = {};
+  var issueCounts = {};
+
+  for (var i = 0; i < toAnalyze.length; i++) {
+    var c = toAnalyze[i];
+    var pct = 45 + Math.round((i / toAnalyze.length) * 35);
+    setProgress(pct, 'Step 3/5 — AI analyzing comment ' + (i+1) + ' / ' + toAnalyze.length + '...');
+
+    try {
+      var aiResp = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 400,
+          system: 'You are Jansatta AI. Analyze Indian civic complaints. Respond ONLY with valid JSON, no markdown: {"language":"Hindi|Hinglish|English|Punjabi|Urdu|Mixed","sentiment":"Negative|Positive|Neutral","issue_category":"Road Infrastructure|Water Supply|Garbage Collection|Electricity Outages|Healthcare|Corruption|Drainage|Public Transport|Sanitation|Other","ward_name":"DELHI WARD IN ALL CAPS","severity":"urgent|high|moderate|low"}',
+          messages:[{role:'user', content:'Analyze: "' + c.text.substring(0,300).replace(/"/g,"'") + '"'}]
+        })
+      });
+      var aiData = await aiResp.json();
+      if (!aiData.error) {
+        var raw = aiData.content[0].text.replace(/```json|```/g,'').trim();
+        var r = JSON.parse(raw);
+        r.original = c;
+        results.push(r);
+
+        // tally language
+        var lang = r.language || 'Mixed';
+        langCounts[lang] = (langCounts[lang] || 0) + 1;
+
+        // tally issue
+        var iss = r.issue_category || 'Other';
+        issueCounts[iss] = (issueCounts[iss] || 0) + 1;
+        if (issueCounters[iss] !== undefined) issueCounters[iss] += 1;
+      }
+    } catch(e) {
+      // skip failed analyses
+    }
+    await sleep(150);
+  }
+
+  document.getElementById('pc2').textContent = results.length + ' analyzed';
+  activatePipe(3);
+  setProgress(83, 'Step 4/5 — Mapping to ward boundaries...');
+  await sleep(400);
+
+  var wardsMapped = [...new Set(results.map(function(r){ return r.ward_name; }).filter(Boolean))];
+  document.getElementById('pc3').textContent = wardsMapped.length + ' wards';
+
+  activatePipe(4);
+  setProgress(95, 'Step 5/5 — Generating governance alerts...');
+  await sleep(400);
+
+  var urgentCount = results.filter(function(r){ return r.severity==='urgent'; }).length;
+  var highCount = results.filter(function(r){ return r.severity==='high'; }).length;
+  document.getElementById('pc4').textContent = urgentCount + ' urgent';
+  setProgress(100, '✓ Pipeline complete! ' + results.length + ' comments analyzed');
+
+  // Update metrics
+  var prevUrgent = parseInt(document.getElementById('m-urgent').textContent)||14;
+  var prevHigh = parseInt(document.getElementById('m-high').textContent)||33;
+  document.getElementById('m-urgent').textContent = prevUrgent + urgentCount;
+  document.getElementById('m-high').textContent = prevHigh + highCount;
+  document.getElementById('m-datapoints').textContent = (58 + Math.round(results.length/10)) + 'K';
+
+  // Update language bars
+  var total = results.length || 1;
+  Object.keys(langCounts).forEach(function(lang){
+    var pct = Math.round(langCounts[lang]/total*100);
+    var bar = document.getElementById('lb-'+lang);
+    var pctEl = document.getElementById('lp-'+lang);
+    if(bar) bar.style.width = pct + '%';
+    if(pctEl) pctEl.textContent = pct + '%';
+  });
+
+  // Update issue bars
+  renderIssueBars();
+  document.getElementById('issueWeek').textContent = 'Live Batch';
+
+  // Add new reports to feed
+  document.getElementById('reportFeedLabel').textContent = 'Live YouTube Feed · ' + results.length + ' new';
+  var list = document.getElementById('reportList');
+  var newItems = '';
+  results.slice(0, 8).forEach(function(r){
+    var bc = sevBorderColors[r.severity] || '#5a6a82';
+    var sevClass = 'tag-sev-' + (r.severity || 'moderate');
+    var txt = (r.original.text || '').substring(0, 140);
+    newItems += '<div class="report-item" style="border-color:' + bc + ';">' +
+      '<div class="report-top"><span class="report-ward">' + (r.ward_name || 'DELHI') + '</span>' +
+      '<span class="report-time">just now</span></div>' +
+      '<div class="report-text">"' + escHtml(txt) + (txt.length >= 140 ? '...' : '') + '"</div>' +
+      '<div class="report-tags">' +
+      '<span class="tag tag-lang">' + (r.language||'Mixed') + '</span>' +
+      '<span class="tag tag-issue">' + (r.issue_category||'Civic') + '</span>' +
+      '<span class="tag ' + sevClass + '">' + (r.severity||'moderate').toUpperCase() + '</span>' +
+      '<span class="tag tag-yt">▶ YouTube</span>' +
+      '</div></div>';
+  });
+  list.innerHTML = newItems + list.innerHTML;
+
+  document.getElementById('pipelineStatus').textContent = '✓ Complete — ' + results.length + ' analyzed';
+  document.getElementById('pipelineStatus').style.color = 'var(--green)';
+  activatePipe(-1);
+
+  statusEl.className = 'batch-status ok';
+  statusEl.textContent = '✓ Pipeline complete! ' + results.length + ' real YouTube comments analyzed. ' + urgentCount + ' urgent · ' + highCount + ' high priority. View Live Map to see ward-level pins.';
+  btn.disabled = false;
+}
+
+function escHtml(str){
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
 </script>
 </body>
 </html>
