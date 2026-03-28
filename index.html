@@ -423,7 +423,10 @@ fetch('Delhi_Wards.geojson')
           tt=L.tooltip({sticky:true,opacity:1,className:''}).setContent(html).addTo(map).setLatLng(e.latlng);
         });
         layer.on('mousemove',function(e){if(tt) tt.setLatLng(e.latlng);});
-        layer.on('mouseout',function(){geojsonLayer.resetStyle(this);if(tt){map.removeLayer(tt);tt=null;}});
+        layer.on('mouseout',function(){
+          if(this !== highlightedLayer) geojsonLayer.resetStyle(this);
+          if(tt){map.removeLayer(tt);tt=null;}
+        });
       }
     }).addTo(map);
   })
@@ -431,13 +434,51 @@ fetch('Delhi_Wards.geojson')
     document.getElementById('mapLoading').innerHTML='<div style="color:#ff4d4d;font-size:12px;">Could not load ward boundaries.<br>Make sure Delhi_Wards.geojson is in the same folder.</div>';
   });
 
+var highlightedLayer = null;
+var pulseInterval = null;
+var pulseState = false;
+
 function flyToWard(wardName){
-  var layer=wardLayers[wardName];
-  if(!layer){showToast('⚠️ Ward not found: '+wardName);return;}
-  map.flyToBounds(layer.getBounds(),{padding:[60,60],duration:1.2});
-  layer.setStyle({weight:3.5,fillOpacity:0.92,color:'#ffffff'});
-  showToast('📍 Mapped to '+wardName);
-  setTimeout(function(){if(geojsonLayer) geojsonLayer.resetStyle(layer);},2500);
+  // Clear any previous highlight
+  if(highlightedLayer && geojsonLayer){
+    geojsonLayer.resetStyle(highlightedLayer);
+  }
+  if(pulseInterval){ clearInterval(pulseInterval); pulseInterval=null; }
+
+  var layer = wardLayers[wardName];
+  if(!layer){
+    // Try fuzzy match — ward names in GeoJSON may differ slightly
+    var keys = Object.keys(wardLayers);
+    var match = keys.find(function(k){ return k.toUpperCase().indexOf(wardName.toUpperCase())>-1 || wardName.toUpperCase().indexOf(k.toUpperCase())>-1; });
+    if(match) layer = wardLayers[match];
+  }
+
+  if(!layer){
+    showToast('⚠️ Ward not on map: '+wardName);
+    return;
+  }
+
+  highlightedLayer = layer;
+
+  // Fly to ward
+  map.flyToBounds(layer.getBounds(), {padding:[80,80], duration:1.0});
+
+  // Pulsing bright highlight — stays persistent
+  pulseState = false;
+  layer.setStyle({weight:4, fillOpacity:0.92, color:'#ffffff', fillColor:'#ff4d4d'});
+
+  pulseInterval = setInterval(function(){
+    if(!highlightedLayer) return;
+    pulseState = !pulseState;
+    highlightedLayer.setStyle({
+      weight: pulseState ? 5 : 3,
+      fillOpacity: pulseState ? 0.88 : 0.65,
+      color: pulseState ? '#ffffff' : '#ff4d4d',
+      fillColor: '#ff4d4d'
+    });
+  }, 600);
+
+  showToast('📍 Ward highlighted: '+wardName);
 }
 
 function showToast(msg){
