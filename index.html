@@ -239,6 +239,9 @@ textarea::placeholder{color:var(--muted);font-size:12px;}
 
 <div class="ward-fly-toast" id="wardToast">📍 Flying to ward...</div>
 
+<!-- WARD HOVER POPUP — at body level so nothing clips it -->
+<div id="wardPopup"></div>
+
 <nav>
   <div class="logo">JAN<em>SATTA</em> AI</div>
   <div class="nav-center">
@@ -367,6 +370,9 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',{max
 var severityColors = {urgent:'#ff4d4d',high:'#ff8c00',moderate:'#ffd600',low:'#00e676'};
 var wardLayers = {};
 var geojsonLayer;
+var highlightedLayer = null;
+var pulseInterval = null;
+var pulseState = false;
 
 var wardData = {
   'SHAHDARA':{severity:'urgent',issue:'Road Infrastructure',report_count:72},
@@ -410,22 +416,16 @@ fetch('Delhi_Wards.geojson')
         var p=feature.properties;
         var enriched=getEnrichedProps(p.Ward_Name);
         wardLayers[p.Ward_Name]=layer;
-        var tt=null;
         layer.on('mouseover',function(e){
-          this.setStyle({weight:2.5,fillOpacity:0.88});
-          var col=severityColors[enriched.severity]||'#00e676';
-          var html='<div style="background:#0d1117;border:1px solid rgba(255,255,255,0.1);border-radius:8px;padding:10px 12px;font-family:DM Sans,sans-serif;min-width:170px;">';
-          html+='<div style="font-weight:700;font-size:13px;margin-bottom:3px;color:#eef0f6;">'+(p.Ward_Name||'Unknown Ward')+'</div>';
-          html+='<div style="font-size:11px;color:#5a6a82;margin-bottom:3px;">'+enriched.issue+'</div>';
-          html+='<div style="font-size:10px;font-weight:700;letter-spacing:1px;color:'+col+';">'+enriched.severity.toUpperCase()+'</div>';
-          html+='<div style="font-size:10px;color:#5a6a82;margin-top:3px;">'+enriched.report_count+' reports detected</div>';
-          html+='</div>';
-          tt=L.tooltip({sticky:true,opacity:1,className:''}).setContent(html).addTo(map).setLatLng(e.latlng);
+          if(this !== highlightedLayer) this.setStyle({weight:2.5,fillOpacity:0.82,color:'#ffffff'});
+          showWardPopup(p.Ward_Name, enriched, e.originalEvent);
         });
-        layer.on('mousemove',function(e){if(tt) tt.setLatLng(e.latlng);});
+        layer.on('mousemove',function(e){
+          moveWardPopup(e.originalEvent);
+        });
         layer.on('mouseout',function(){
           if(this !== highlightedLayer) geojsonLayer.resetStyle(this);
-          if(tt){map.removeLayer(tt);tt=null;}
+          hideWardPopup();
         });
       }
     }).addTo(map);
@@ -433,10 +433,6 @@ fetch('Delhi_Wards.geojson')
   .catch(function(){
     document.getElementById('mapLoading').innerHTML='<div style="color:#ff4d4d;font-size:12px;">Could not load ward boundaries.<br>Make sure Delhi_Wards.geojson is in the same folder.</div>';
   });
-
-var highlightedLayer = null;
-var pulseInterval = null;
-var pulseState = false;
 
 function flyToWard(wardName){
   // Clear any previous highlight
@@ -749,6 +745,120 @@ function showResult(r){
 
 function escHtml(str){
   return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ===================== WARD HOVER POPUP =====================
+var wardIssueDetails = {
+  'SHAHDARA':           [{name:'Road Infrastructure',count:72,color:'#ff4d4d'},{name:'Waterlogging',count:31,color:'#63b3ff'},{name:'Garbage',count:18,color:'#ff8c00'}],
+  'ROHINI':             [{name:'Water Supply',count:60,color:'#63b3ff'},{name:'Electricity',count:22,color:'#ffd600'},{name:'Roads',count:14,color:'#ff4d4d'}],
+  'MUSTAFABAD':         [{name:'Drainage Overflow',count:64,color:'#ff4d4d'},{name:'Garbage',count:29,color:'#ff8c00'},{name:'Roads',count:17,color:'#ff4d4d'}],
+  'CHANDNI CHOWK':      [{name:'Garbage Collection',count:43,color:'#ff8c00'},{name:'Encroachment',count:27,color:'#a78bfa'},{name:'Drainage',count:19,color:'#63b3ff'}],
+  'ROHINI EAST':        [{name:'Electricity Outages',count:38,color:'#ffd600'},{name:'Water Supply',count:21,color:'#63b3ff'},{name:'Roads',count:12,color:'#ff4d4d'}],
+  'BURARI':             [{name:'Road Infrastructure',count:26,color:'#ff4d4d'},{name:'Dust & Pollution',count:18,color:'#ff8c00'},{name:'Garbage',count:11,color:'#ff8c00'}],
+  'TRILOK PURI':        [{name:'Water Contamination',count:30,color:'#63b3ff'},{name:'Sanitation',count:24,color:'#34d399'},{name:'Roads',count:9,color:'#ff4d4d'}],
+  'PATPARGANJ':         [{name:'Water Contamination',count:52,color:'#63b3ff'},{name:'Healthcare',count:34,color:'#00e676'},{name:'Roads',count:16,color:'#ff4d4d'}],
+  'KONDLI':             [{name:'Corruption Reports',count:30,color:'#a78bfa'},{name:'Electricity',count:24,color:'#ffd600'},{name:'Garbage',count:13,color:'#ff8c00'}],
+  'KALYAN PURI':        [{name:'Water Supply',count:33,color:'#63b3ff'},{name:'Corruption',count:21,color:'#a78bfa'},{name:'Roads',count:15,color:'#ff4d4d'}],
+  'MAYUR VIHAR PHASE-I':[{name:'Healthcare Crisis',count:63,color:'#00e676'},{name:'Water',count:28,color:'#63b3ff'},{name:'Roads',count:19,color:'#ff4d4d'}],
+  'KALKAJI':            [{name:'Healthcare Crisis',count:59,color:'#00e676'},{name:'Roads',count:31,color:'#ff4d4d'},{name:'Sanitation',count:20,color:'#34d399'}],
+  'MODEL TOWN':         [{name:'Sewage Overflow',count:48,color:'#ff4d4d'},{name:'Roads',count:26,color:'#ff4d4d'},{name:'Garbage',count:14,color:'#ff8c00'}],
+  'PUSA':               [{name:'Water Supply',count:33,color:'#63b3ff'},{name:'Sanitation',count:19,color:'#34d399'},{name:'Roads',count:11,color:'#ff4d4d'}],
+};
+var zoneMap = {
+  'SHAHDARA':'North-East Delhi','ROHINI':'North Delhi','ROHINI EAST':'North Delhi',
+  'MUSTAFABAD':'North-East Delhi','CHANDNI CHOWK':'Central Delhi','BURARI':'North Delhi',
+  'TRILOK PURI':'East Delhi','PATPARGANJ':'East Delhi','KONDLI':'East Delhi',
+  'KALYAN PURI':'East Delhi','MAYUR VIHAR PHASE-I':'East Delhi','KALKAJI':'South Delhi',
+  'MODEL TOWN':'North Delhi','PUSA':'West Delhi',
+};
+
+function getWardIssues(wardName, enriched){
+  if(wardIssueDetails[wardName]) return wardIssueDetails[wardName];
+  return [
+    {name:enriched.issue, count:enriched.report_count, color:'#ff4d4d'},
+    {name:issues[(wardName.charCodeAt(0)+1)%issues.length], count:Math.round(enriched.report_count*0.5), color:'#ff8c00'},
+    {name:issues[(wardName.charCodeAt(0)+3)%issues.length], count:Math.round(enriched.report_count*0.28), color:'#ffd600'},
+  ];
+}
+
+function showWardPopup(wardName, enriched, mouseEvent){
+  var issueList = getWardIssues(wardName, enriched);
+  var totalCount = issueList.reduce(function(s,i){return s+i.count;},0);
+  var sevBg   = {urgent:'rgba(255,77,77,0.18)',high:'rgba(255,140,0,0.18)',moderate:'rgba(255,214,0,0.12)',low:'rgba(0,230,118,0.12)'};
+  var sevFg   = {urgent:'#ff4d4d',high:'#ff8c00',moderate:'#ffd600',low:'#00e676'};
+  var sev = enriched.severity || 'moderate';
+  var maxCount = issueList[0].count;
+
+  var issueRows = issueList.map(function(iss){
+    var barW = Math.round(iss.count / maxCount * 100);
+    return '<div style="margin-bottom:7px;">'+
+      '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:3px;">'+
+        '<span style="font-size:11px;color:#c8d0de;">'+iss.name+'</span>'+
+        '<span style="font-size:11px;font-weight:700;color:'+iss.color+';">'+iss.count+'</span>'+
+      '</div>'+
+      '<div style="height:4px;background:rgba(255,255,255,0.07);border-radius:3px;overflow:hidden;">'+
+        '<div style="height:100%;width:'+barW+'%;background:'+iss.color+';border-radius:3px;transition:width 0.4s;"></div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+
+  var html =
+    '<div style="'+
+      'position:fixed;z-index:99999;pointer-events:none;'+
+      'font-family:DM Sans,sans-serif;width:250px;'+
+      'background:rgba(8,11,18,0.97);'+
+      'border:1px solid rgba(255,255,255,0.13);'+
+      'border-radius:13px;padding:15px 17px;'+
+      'box-shadow:0 12px 40px rgba(0,0,0,0.7);'+
+      'left:0;top:0;'+
+    '">'+
+      // Ward name
+      '<div style="font-family:Syne,sans-serif;font-weight:800;font-size:15px;color:#eef0f6;letter-spacing:-0.4px;margin-bottom:1px;">'+wardName+'</div>'+
+      '<div style="font-size:10px;color:#4a5a72;letter-spacing:1px;text-transform:uppercase;margin-bottom:11px;">'+
+        (zoneMap[wardName]||'Delhi NCT')+' · Ward'+
+      '</div>'+
+      // Divider
+      '<div style="height:1px;background:rgba(255,255,255,0.07);margin-bottom:11px;"></div>'+
+      // Issues label
+      '<div style="font-size:9px;font-weight:700;letter-spacing:1.8px;color:#4a5a72;text-transform:uppercase;margin-bottom:9px;">Top Complaints</div>'+
+      issueRows+
+      // Divider
+      '<div style="height:1px;background:rgba(255,255,255,0.07);margin:10px 0 11px;"></div>'+
+      // Footer row
+      '<div style="display:flex;align-items:center;justify-content:space-between;">'+
+        '<div>'+
+          '<div style="font-family:Syne,sans-serif;font-size:24px;font-weight:800;color:'+sevFg[sev]+';line-height:1;">'+totalCount+'</div>'+
+          '<div style="font-size:10px;color:#4a5a72;margin-top:1px;">total complaints</div>'+
+        '</div>'+
+        '<div style="padding:5px 13px;border-radius:20px;font-size:10px;font-weight:700;letter-spacing:1.2px;text-transform:uppercase;'+
+          'background:'+sevBg[sev]+';color:'+sevFg[sev]+';border:1px solid '+sevFg[sev]+'44;">'+
+          sev.toUpperCase()+
+        '</div>'+
+      '</div>'+
+    '</div>';
+
+  var popup = document.getElementById('wardPopup');
+  popup.innerHTML = html;
+  positionPopup(mouseEvent);
+}
+
+function positionPopup(e){
+  var popup = document.getElementById('wardPopup');
+  var inner = popup.firstElementChild;
+  if(!inner) return;
+  var x = e.clientX, y = e.clientY;
+  var pw = 260, ph = 230;
+  var vw = window.innerWidth, vh = window.innerHeight;
+  var left = (x + pw + 20 > vw) ? x - pw - 14 : x + 18;
+  var top  = (y + ph + 20 > vh) ? y - ph - 14 : y + 18;
+  inner.style.left = left + 'px';
+  inner.style.top  = top  + 'px';
+}
+
+function moveWardPopup(e){ positionPopup(e); }
+function hideWardPopup(){
+  var popup = document.getElementById('wardPopup');
+  if(popup) popup.innerHTML = '';
 }
 </script>
 </body>
